@@ -40,7 +40,8 @@ $config = [
                 'api' => '/api/user/index',
                 'api/test' => '/api/user/test',
                 'api/logout' => '/api/user/logout',
-                'api/login' => '/api/user/login'
+                'api/login' => '/api/user/login',
+                'api/glogin' => '/api/user/glogin'
             ],
         ],
         'cache' => [

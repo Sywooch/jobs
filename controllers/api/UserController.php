@@ -7,6 +7,7 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\web\Response;
 use yii\rest\ActiveController;
 use app\models\User;
+use yii\web\UploadedFile;
 
 class UserController extends ActiveController
 {
@@ -19,10 +20,11 @@ class UserController extends ActiveController
             'index' => ['POST'],
             'logout' => ['POST'],
             'login' => ['POST'],
-            'view' => ['GET', 'HEAD'],
-            'create' => ['POST'],
-            'update' => ['PUT', 'PATCH'],
-            'delete' => ['DELETE'],
+            'glogin' => ['POST'],
+//            'view' => ['GET', 'HEAD'],
+//            'create' => ['POST'],
+//            'update' => ['PUT', 'PATCH'],
+//            'delete' => ['DELETE'],
         ];
     }
 
@@ -39,7 +41,7 @@ class UserController extends ActiveController
         $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'except' => ['index', 'login'],
+            'except' => ['index', 'login', 'glogin'],
         ];
         return $behaviors;
     }
@@ -48,6 +50,13 @@ class UserController extends ActiveController
     public function actionIndex(){
         $model = new User();
         if($model->load(Yii::$app->request->post()) && $model->validate() && $model->signup(Yii::$app->request->post())){
+            $imageName = uniqid();
+            $model->file = UploadedFile::getInstance($model, 'file');
+            if (isset($model->file)) {
+                $model->file->saveAs('avatars/' . $imageName . '.' . $model->file->extension);
+                $model->avatar = 'avatars/' . $imageName . '.' . $model->file->extension;
+                $model->save(false);
+            }
             $response = array(
                 'status' => 200,
                 'message' => 'User has been registered.',
@@ -57,6 +66,23 @@ class UserController extends ActiveController
             $response = array(
                 'status' => 400,
                 'message' => $model->getErrors()
+            );
+        }
+
+        return $response;
+    }
+
+    //Google SignUp
+    public function actionGlogin()
+    {
+        if(Yii::$app->request->post('token')){
+            $response = array(
+                'status' => 200,
+            );
+        } else {
+            $response = array(
+                'status' => 400,
+                'message' => 'bad parameters'
             );
         }
 
@@ -103,6 +129,7 @@ class UserController extends ActiveController
         return $response;
     }
 
+    //Authorization test
     public function actionTest()
     {
         $user = Yii::$app->user->identity;

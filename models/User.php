@@ -11,6 +11,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public $_user;
     public $password;
+    public $photo;
 
     public static function tableName()
     {
@@ -28,6 +29,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ['username', 'unique', 'message' => 'This username has already been taken'],
 
             [['country', 'city'], 'string', 'max' => 100],
+
+            [['photo'], 'file'],
 
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
