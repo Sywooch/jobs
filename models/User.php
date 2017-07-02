@@ -10,6 +10,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     const STATUS_ACTIVE = 10;
 
     public $_user;
+    public $password;
 
     public static function tableName()
     {
@@ -137,7 +138,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $this->_user->auth_key;
     }
 
-    public function signup()
+    public function signup($request)
     {
         $user = new User();
         $user->username = $this->username;
@@ -145,7 +146,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user->phone = $this->phone;
         $user->country = $this->country;
         $user->city = $this->city;
-        $user->setPassword($this->password_hash);
+        $user->setPassword($request['User']['password']);
         $user->generateAuthKey();
         $user->status = 10;
 

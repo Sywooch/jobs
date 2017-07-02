@@ -47,7 +47,7 @@ class UserController extends ActiveController
     //Basic register
     public function actionIndex(){
         $model = new User();
-        if($model->load(Yii::$app->request->post()) && $model->validate() && $model->signup()){
+        if($model->load(Yii::$app->request->post()) && $model->validate() && $model->signup(Yii::$app->request->post())){
             $response = array(
                 'status' => 200,
                 'message' => 'User has been registered.',
@@ -106,9 +106,9 @@ class UserController extends ActiveController
     public function actionTest()
     {
         $user = Yii::$app->user->identity;
-        return array([
+        return array(
             'message' => 'Auth OK!',
             'user' => $user
-        ]);
+        );
     }
 }

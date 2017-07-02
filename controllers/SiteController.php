@@ -21,6 +21,11 @@ class SiteController extends Controller
 //	    ];
 //	}
 
+	public function actionTest()
+	{
+		return 123;
+	}
+
 	private function _getStatusCodeMessage($status)
 	{
 		$codes = [
