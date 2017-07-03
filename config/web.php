@@ -42,7 +42,8 @@ $config = [
                 'api/logout' => '/api/user/logout',
                 'api/login' => '/api/user/login',
                 'api/glogin' => '/api/user/glogin',
-                'api/flogin' => '/api/user/flogin'
+                'api/flogin' => '/api/user/flogin',
+                'api/llogin' => '/api/user/llogin'
             ],
         ],
         'cache' => [

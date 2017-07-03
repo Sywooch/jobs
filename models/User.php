@@ -197,7 +197,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     //Facebook SignUp
     public function fregister($accessToken)
     {
-        $url = 'https://graph.facebook.com/me?access_token=' . $accessToken;
+        $url = 'https://graph.facebook.com/me?fields=id,name,email,picture&access_token=' . $accessToken;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -209,7 +209,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $result = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($result);
-        var_dump($result);die;
 
         $user = new User();
         $user->username = $result->name;
@@ -218,8 +217,45 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $this->auth_key = $this->findByEmail($result->email)->auth_key;
             return $this->auth_key;
         }
-        $this->email = $result->email;
-        $user->avatar = $result->picture;
+        $this->email = $user->email;
+
+        if(isset($result->picture->data->url)){
+            $user->avatar = $result->picture->data->url;
+        }
+        $user->setPassword($result->id);
+        $user->generateAuthKey();
+        $user->status = 10;
+
+        return $user->save() ? $user : null;
+    }
+
+    //LinkedIn SignUp
+    public function lregister($accessToken)
+    {
+        $url = 'https://api.linkedin.com/v1/people/~:(id,email-address,formatted-name,picture-url)?oauth2_access_token=' . $accessToken . '&format=json';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_REFERER, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $result = curl_exec($ch);
+        $result = json_decode($result);
+        curl_close($ch);
+
+        $user = new User();
+        $user->username = $result->formattedName;
+        $user->email = $result->emailAddress;
+        if($this->findByEmail($result->emailAddress)){
+            $this->auth_key = $this->findByEmail($result->emailAddress)->auth_key;
+            return $this->auth_key;
+        }
+        $this->email = $result->emailAddress;
+        if(isset($result->pictureUrl)){
+            $user->avatar = $result->pictureUrl;
+        }
         $user->setPassword($result->id);
         $user->generateAuthKey();
         $user->status = 10;

@@ -41,7 +41,7 @@ class UserController extends ActiveController
         $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'except' => ['index', 'login', 'glogin', 'get'],
+            'except' => ['index', 'login', 'glogin', 'flogin', 'llogin'],
         ];
         return $behaviors;
     }
@@ -77,11 +77,19 @@ class UserController extends ActiveController
     {
         $model = new User();
         if(Yii::$app->request->post('token') && $model->gregister(Yii::$app->request->post('token'))){
-            $response = array(
-                'status' => 200,
-                'message' => 'Successfully login.',
-                'token' => $model->auth_key
-            );
+            if(isset($model->auth_key)){
+                $response = array(
+                    'status' => 200,
+                    'message' => 'Successfully login.',
+                    'token' => $model->auth_key
+                );
+            } else {
+                $response = array(
+                    'status' => 200,
+                    'message' => 'Successfully login.',
+                    'token' => $model->getUserAuth()
+                );
+            }
         } else {
             $response = array(
                 'status' => 400,
@@ -97,11 +105,47 @@ class UserController extends ActiveController
     {
         $model = new User();
         if(Yii::$app->request->post('token') && $model->fregister(Yii::$app->request->post('token'))){
+            if(isset($model->auth_key)){
+                $response = array(
+                    'status' => 200,
+                    'message' => 'Successfully login.',
+                    'token' => $model->auth_key
+                );
+            } else {
+                $response = array(
+                    'status' => 200,
+                    'message' => 'Successfully login.',
+                    'token' => $model->getUserAuth()
+                );
+            }
+        } else {
             $response = array(
-                'status' => 200,
-                'message' => 'Successfully login.',
-                'token' => $model->auth_key
+                'status' => 400,
+                'message' => 'Bad parameters or can\'t login.'
             );
+        }
+
+        return $response;
+    }
+
+    //LinkedIn SignUp
+    public function actionLlogin()
+    {
+        $model = new User();
+        if(Yii::$app->request->post('token') && $model->lregister(Yii::$app->request->post('token'))){
+            if(isset($model->auth_key)){
+                $response = array(
+                    'status' => 200,
+                    'message' => 'Successfully login.',
+                    'token' => $model->auth_key
+                );
+            } else {
+                $response = array(
+                    'status' => 200,
+                    'message' => 'Successfully login.',
+                    'token' => $model->getUserAuth()
+                );
+            }
         } else {
             $response = array(
                 'status' => 400,
