@@ -25,8 +25,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
 
+            [['avatar'], 'string', 'max' => 255],
             ['username', 'required'],
-            ['username', 'unique', 'message' => 'This username has already been taken'],
 
             [['country', 'city'], 'string', 'max' => 100],
 
@@ -55,6 +55,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public static function findByUsername($username)
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    public static function findByEmail($email)
+    {
+        return static::findOne(['email' => $email, 'status' => self::STATUS_ACTIVE]);
     }
 
     public static function findByPasswordResetToken($token)
@@ -135,12 +140,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getUserAuth()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findByEmail($this->email);
         }
 
         return $this->_user->auth_key;
     }
 
+    //Basic SignUp
     public function signup($request)
     {
         $user = new User();
@@ -156,9 +162,74 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $user->save() ? $user : null;
     }
 
+    //Google SignUp
+    public function gregister($accessToken)
+    {
+        $url = 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' . $accessToken;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_REFERER, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($result);
+
+        $user = new User();
+        $user->username = $result->name;
+        $user->email = $result->email;
+        if($this->findByEmail($result->email)){
+            $this->auth_key = $this->findByEmail($result->email)->auth_key;
+            return $this->auth_key;
+        }
+        $this->email = $result->email;
+        $user->avatar = $result->picture;
+        $user->setPassword($result->id);
+        $user->generateAuthKey();
+        $user->status = 10;
+
+        return $user->save() ? $user : null;
+    }
+
+    //Facebook SignUp
+    public function fregister($accessToken)
+    {
+        $url = 'https://graph.facebook.com/me?access_token=' . $accessToken;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_REFERER, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($result);
+        var_dump($result);die;
+
+        $user = new User();
+        $user->username = $result->name;
+        $user->email = $result->email;
+        if($this->findByEmail($result->email)){
+            $this->auth_key = $this->findByEmail($result->email)->auth_key;
+            return $this->auth_key;
+        }
+        $this->email = $result->email;
+        $user->avatar = $result->picture;
+        $user->setPassword($result->id);
+        $user->generateAuthKey();
+        $user->status = 10;
+
+        return $user->save() ? $user : null;
+    }
+
     public function login($request)
     {
-        $user = $this->findByUsername($request['username']);
+        $user = $this->findByEmail($request['email']);
         if($user){
             if(Yii::$app->security->validatePassword($request['password'], $user->password_hash)){
                 return true;

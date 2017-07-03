@@ -41,7 +41,7 @@ class UserController extends ActiveController
         $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'except' => ['index', 'login', 'glogin'],
+            'except' => ['index', 'login', 'glogin', 'get'],
         ];
         return $behaviors;
     }
@@ -51,10 +51,10 @@ class UserController extends ActiveController
         $model = new User();
         if($model->load(Yii::$app->request->post()) && $model->validate() && $model->signup(Yii::$app->request->post())){
             $imageName = uniqid();
-            $model->file = UploadedFile::getInstance($model, 'file');
-            if (isset($model->file)) {
-                $model->file->saveAs('avatars/' . $imageName . '.' . $model->file->extension);
-                $model->avatar = 'avatars/' . $imageName . '.' . $model->file->extension;
+            $model->photo = UploadedFile::getInstance($model, 'photo');
+            if (isset($model->photo)) {
+                $model->photo->saveAs('avatars/' . $imageName . '.' . $model->photo->extension);
+                $model->avatar = 'avatars/' . $imageName . '.' . $model->photo->extension;
                 $model->save(false);
             }
             $response = array(
@@ -75,14 +75,37 @@ class UserController extends ActiveController
     //Google SignUp
     public function actionGlogin()
     {
-        if(Yii::$app->request->post('token')){
+        $model = new User();
+        if(Yii::$app->request->post('token') && $model->gregister(Yii::$app->request->post('token'))){
             $response = array(
                 'status' => 200,
+                'message' => 'Successfully login.',
+                'token' => $model->auth_key
             );
         } else {
             $response = array(
                 'status' => 400,
-                'message' => 'bad parameters'
+                'message' => 'Bad parameters or can\'t login.'
+            );
+        }
+
+        return $response;
+    }
+
+    //Facebook SignUp
+    public function actionFlogin()
+    {
+        $model = new User();
+        if(Yii::$app->request->post('token') && $model->fregister(Yii::$app->request->post('token'))){
+            $response = array(
+                'status' => 200,
+                'message' => 'Successfully login.',
+                'token' => $model->auth_key
+            );
+        } else {
+            $response = array(
+                'status' => 400,
+                'message' => 'Bad parameters or can\'t login.'
             );
         }
 
@@ -98,7 +121,7 @@ class UserController extends ActiveController
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',
-                    'token' => $model->findByUsername(Yii::$app->request->post('username'))->auth_key
+                    'token' => $model->findByEmail(Yii::$app->request->post('email'))->auth_key
                 );
             } else {
                 $response = array(
