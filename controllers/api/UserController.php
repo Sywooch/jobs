@@ -51,6 +51,9 @@ class UserController extends ActiveController
     //Basic register
     public function actionIndex(){
         $model = new User();
+//        $model->photo = UploadedFile::getInstanceByName("photo");
+//        $imageName = uniqid();
+//        $model->photo->saveAs('avatars/' . $imageName . '.' . $model->photo->extension);
         if($model->load(Yii::$app->request->post()) && $model->validate() && $model->signup(Yii::$app->request->post())){
             $imageName = uniqid();
             $model->photo = UploadedFile::getInstance($model, 'photo');
