@@ -36,7 +36,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'unique', 'message' => 'This email address has already been taken'],
-            
+
             ['phone', 'unique', 'message' => 'This phone number has already been taken'],
         ];
     }
@@ -180,6 +180,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
         $user = new User();
         $user->username = $result->name;
+        $this->username = $result->name;
         $user->email = $result->email;
         if($this->findByEmail($result->email)){
             $this->auth_key = $this->findByEmail($result->email)->auth_key;
@@ -187,6 +188,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         $this->email = $result->email;
         $user->avatar = $result->picture;
+        $this->avatar = $result->picture;
         $user->setPassword($result->id);
         $user->generateAuthKey();
         $user->status = 10;
@@ -221,6 +223,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
         if(isset($result->picture->data->url)){
             $user->avatar = $result->picture->data->url;
+            $this->avatar = $result->picture->data->url;
         }
         $user->setPassword($result->id);
         $user->generateAuthKey();
@@ -247,6 +250,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
         $user = new User();
         $user->username = $result->formattedName;
+        $this->username = $result->formattedName;
         $user->email = $result->emailAddress;
         if($this->findByEmail($result->emailAddress)){
             $this->auth_key = $this->findByEmail($result->emailAddress)->auth_key;
@@ -255,6 +259,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $this->email = $result->emailAddress;
         if(isset($result->pictureUrl)){
             $user->avatar = $result->pictureUrl;
+            $this->avatar = $result->pictureUrl;
         }
         $user->setPassword($result->id);
         $user->generateAuthKey();

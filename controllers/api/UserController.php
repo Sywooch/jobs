@@ -21,6 +21,8 @@ class UserController extends ActiveController
             'logout' => ['POST'],
             'login' => ['POST'],
             'glogin' => ['POST'],
+            'flogin' => ['POST'],
+            'llogin' => ['POST'],
 //            'view' => ['GET', 'HEAD'],
 //            'create' => ['POST'],
 //            'update' => ['PUT', 'PATCH'],
@@ -60,12 +62,20 @@ class UserController extends ActiveController
             $response = array(
                 'status' => 200,
                 'message' => 'User has been registered.',
-                'token' => $model->getUserAuth()
+                'token' => $model->getUserAuth(),
+                'profile' => array(
+                    'photo' => $model->avatar,
+                    'name' => $model->username,
+                    'email' => $model->email,
+                    'phone' => $model->phone,
+                    'country' => $model->country,
+                    'city' => $model->city
+                ),
             );
         } else {
             $response = array(
                 'status' => 400,
-                'message' => $model->getErrors()
+                'message' => $model->getErrors(),
             );
         }
 
@@ -78,16 +88,33 @@ class UserController extends ActiveController
         $model = new User();
         if(Yii::$app->request->post('token') && $model->gregister(Yii::$app->request->post('token'))){
             if(isset($model->auth_key)){
+                $user = $model->findIdentityByAccessToken($model->auth_key);
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',
-                    'token' => $model->auth_key
+                    'token' => $model->auth_key,
+                    'profile' => array(
+                        'photo' => $user->avatar,
+                        'name' => $user->username,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                        'country' => $user->country,
+                        'city' => $user->city
+                    ),
                 );
             } else {
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',
-                    'token' => $model->getUserAuth()
+                    'token' => $model->getUserAuth(),
+                    'profile' => array(
+                        'photo' => $model->avatar,
+                        'name' => $model->username,
+                        'email' => $model->email,
+                        'phone' => $model->phone,
+                        'country' => $model->country,
+                        'city' => $model->city
+                    ),
                 );
             }
         } else {
@@ -106,16 +133,33 @@ class UserController extends ActiveController
         $model = new User();
         if(Yii::$app->request->post('token') && $model->fregister(Yii::$app->request->post('token'))){
             if(isset($model->auth_key)){
+                $user = $model->findIdentityByAccessToken($model->auth_key);
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',
-                    'token' => $model->auth_key
+                    'token' => $model->auth_key,
+                    'profile' => array(
+                        'photo' => $user->avatar,
+                        'name' => $user->username,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                        'country' => $user->country,
+                        'city' => $user->city
+                    ),
                 );
             } else {
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',
-                    'token' => $model->getUserAuth()
+                    'token' => $model->getUserAuth(),
+                    'profile' => array(
+                        'photo' => $model->avatar,
+                        'name' => $model->username,
+                        'email' => $model->email,
+                        'phone' => $model->phone,
+                        'country' => $model->country,
+                        'city' => $model->city
+                    ),
                 );
             }
         } else {
@@ -134,16 +178,33 @@ class UserController extends ActiveController
         $model = new User();
         if(Yii::$app->request->post('token') && $model->lregister(Yii::$app->request->post('token'))){
             if(isset($model->auth_key)){
+                $user = $model->findIdentityByAccessToken($model->auth_key);
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',
-                    'token' => $model->auth_key
+                    'token' => $model->auth_key,
+                    'profile' => array(
+                        'photo' => $user->avatar,
+                        'name' => $user->username,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                        'country' => $user->country,
+                        'city' => $user->city
+                    ),
                 );
             } else {
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',
-                    'token' => $model->getUserAuth()
+                    'token' => $model->getUserAuth(),
+                    'profile' => array(
+                        'photo' => $model->avatar,
+                        'name' => $model->username,
+                        'email' => $model->email,
+                        'phone' => $model->phone,
+                        'country' => $model->country,
+                        'city' => $model->city
+                    ),
                 );
             }
         } else {
@@ -162,10 +223,19 @@ class UserController extends ActiveController
         $model = new User();
         if(Yii::$app->request->post()){
             if($model->login(Yii::$app->request->post())){
+                $user = $model->findByEmail(Yii::$app->request->post('email'));
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',
-                    'token' => $model->findByEmail(Yii::$app->request->post('email'))->auth_key
+                    'token' => $user->auth_key,
+                    'profile' => array(
+                        'photo' => $user->avatar,
+                        'name' => $user->username,
+                        'email' => $user->email,
+                        'phone' => $user->phone,
+                        'country' => $user->country,
+                        'city' => $user->city
+                    ),
                 );
             } else {
                 $response = array(
