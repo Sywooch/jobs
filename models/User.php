@@ -26,7 +26,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
 
             [['avatar'], 'string', 'max' => 255],
-            ['username', 'required'],
+//            ['username', 'required'],
 
             [['country', 'city'], 'string', 'max' => 100],
 
@@ -151,6 +151,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         $user = new User();
         $user->avatar = 'No image';
+        $this->username = $request['User']['name'];
         $user->username = $request['User']['name'];
         $user->email = $this->email;
         $user->phone = $this->phone;
