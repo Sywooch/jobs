@@ -150,7 +150,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function signup($request)
     {
         $user = new User();
-        $user->username = $this->username;
+        $user->avatar = 'No image';
+        $user->username = $request['User']['username'];
         $user->email = $this->email;
         $user->phone = $this->phone;
         $user->country = $this->country;
@@ -179,13 +180,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $result = json_decode($result);
 
         $user = new User();
-        $user->username = $result->name;
-        $this->username = $result->name;
         $user->email = $result->email;
         if($this->findByEmail($result->email)){
             $this->auth_key = $this->findByEmail($result->email)->auth_key;
             return $this->auth_key;
         }
+        $user->username = $result->name;
+        $this->username = $result->name;
         $this->email = $result->email;
         $user->avatar = $result->picture;
         $this->avatar = $result->picture;
@@ -213,17 +214,19 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $result = json_decode($result);
 
         $user = new User();
-        $user->username = $result->name;
-        $user->email = $result->email;
         if($this->findByEmail($result->email)){
             $this->auth_key = $this->findByEmail($result->email)->auth_key;
             return $this->auth_key;
         }
+        $user->username = $result->name;
+        $user->email = $result->email;
         $this->email = $user->email;
 
         if(isset($result->picture->data->url)){
             $user->avatar = $result->picture->data->url;
             $this->avatar = $result->picture->data->url;
+        } else {
+            $user->avatar = 'No image';
         }
         $user->setPassword($result->id);
         $user->generateAuthKey();
@@ -249,17 +252,19 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         curl_close($ch);
 
         $user = new User();
-        $user->username = $result->formattedName;
-        $this->username = $result->formattedName;
         $user->email = $result->emailAddress;
         if($this->findByEmail($result->emailAddress)){
             $this->auth_key = $this->findByEmail($result->emailAddress)->auth_key;
             return $this->auth_key;
         }
+        $user->username = $result->formattedName;
+        $this->username = $result->formattedName;
         $this->email = $result->emailAddress;
         if(isset($result->pictureUrl)){
             $user->avatar = $result->pictureUrl;
             $this->avatar = $result->pictureUrl;
+        } else {
+            $user->avatar = 'No image';
         }
         $user->setPassword($result->id);
         $user->generateAuthKey();

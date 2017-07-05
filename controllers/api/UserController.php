@@ -23,6 +23,7 @@ class UserController extends ActiveController
             'glogin' => ['POST'],
             'flogin' => ['POST'],
             'llogin' => ['POST'],
+            'avatar-upload' => ['POST'],
 //            'view' => ['GET', 'HEAD'],
 //            'create' => ['POST'],
 //            'update' => ['PUT', 'PATCH'],
@@ -51,9 +52,6 @@ class UserController extends ActiveController
     //Basic register
     public function actionIndex(){
         $model = new User();
-//        $model->photo = UploadedFile::getInstanceByName("photo");
-//        $imageName = uniqid();
-//        $model->photo->saveAs('avatars/' . $imageName . '.' . $model->photo->extension);
         if($model->load(Yii::$app->request->post()) && $model->validate() && $model->signup(Yii::$app->request->post())){
             $imageName = uniqid();
             $model->photo = UploadedFile::getInstance($model, 'photo');
@@ -83,6 +81,36 @@ class UserController extends ActiveController
         }
 
         return $response;
+    }
+
+    //Upload Avatar
+    public function actionAvatarUpload()
+    {
+        $user = Yii::$app->user->identity;
+        $photo = UploadedFile::getInstanceByName("photo");
+        $imageName = uniqid();
+
+        if($photo){
+            if($user->avatar) {
+                if(!preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}'.'((:[0-9]{1,5})?\\/.*)?$/i', $user->avatar) && file_exists(getcwd().'/'.$user->avatar)){
+                    unlink(getcwd().'/'.$user->avatar);
+                }
+            }
+            $photo->saveAs('avatars/' . $imageName . '.' . $photo->extension);
+            $user->avatar = 'avatars/' . $imageName . '.' . $photo->extension;
+            $user->save(false);
+
+            return array(
+                'status' => 200,
+                'message' => 'Image successfully uploaded.',
+                'photo' => $user->avatar
+            );
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad request.'
+            );
+        }
     }
 
     //Google SignUp

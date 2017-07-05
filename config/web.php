@@ -45,7 +45,8 @@ $config = [
                 'api/flogin' => '/api/user/flogin',
                 'api/llogin' => '/api/user/llogin',
                 'api/profile' => '/api/profile/profile',
-                'api/change-profile' => '/api/profile/change-profile'
+                'api/change-profile' => '/api/profile/change-profile',
+                'api/avatar-upload' => '/api/user/avatar-upload'
             ],
         ],
         'cache' => [
