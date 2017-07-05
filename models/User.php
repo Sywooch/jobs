@@ -151,7 +151,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         $user = new User();
         $user->avatar = 'No image';
-        $user->username = $request['User']['username'];
+        $user->username = $request['User']['name'];
         $user->email = $this->email;
         $user->phone = $this->phone;
         $user->country = $this->country;
