@@ -1,6 +1,6 @@
 {
     "name": "yii2-rest-api",
-    "description": "Yii2 Basic Rest Api Example",
+    "description": "Yii2 Basic Rest Api",
     "keywords": ["yii2", "framework", "basic", "rest-api"],
     "type": "project",
     "license": "BSD-3-Clause",
@@ -8,7 +8,9 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": ">=2.0.5"
+        "yiisoft/yii2": ">=2.0.5",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "yiisoft/yii2-swiftmailer": "~2.0.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

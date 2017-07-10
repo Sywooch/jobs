@@ -274,6 +274,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $user->save() ? $user : null;
     }
 
+    //Basic login
     public function login($request)
     {
         $user = $this->findByEmail($request['email']);
@@ -290,8 +291,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         if (parent::beforeSave($insert)) {
             $time = time();
-//            $this->access_token = Yii::$app->security->generateRandomString();
-//            $this->token_expiry = $time + Yii::$app->params['token_expiry'];
 
             if ($this->isNewRecord) {
                 $this->created_at = $time;

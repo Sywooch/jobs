@@ -48,6 +48,7 @@ $config = [
                 'api/change-profile' => '/api/profile/change-profile',
                 'api/change-password' => '/api/profile/change-password',
                 'api/avatar-upload' => '/api/user/avatar-upload',
+                'api/category' => '/api/post/category',
                 'api/post-create' => '/api/post/create',
                 'api/post-image' => '/api/post/upload-post-image',
             ],
@@ -62,6 +63,19 @@ $config = [
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
+        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'viewPath' => '@app/mail',
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',
+                'username' => 'crm.urich@gmail.com',
+                'password' => '1995202009vasya',
+                'port' => '587',
+                'encryption' => 'tls',
+            ],
+            'useFileTransport' => false,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

@@ -28,6 +28,7 @@ class PostImages extends \yii\db\ActiveRecord
     public function upload($photos, $post_id)
     {
         if(isset($photos)){
+//            var_dump($this->sortPhoto($photos));die;
             foreach($photos as $photo){
                 $model = new PostImages();
                 $imageName = uniqid();
@@ -43,6 +44,20 @@ class PostImages extends \yii\db\ActiveRecord
         } else {
             return null;
         }
+    }
+
+    public function sortPhoto($photos){
+//        $str=strpos($photo, "-++");
+//        $row=substr($row, 0, $str);
+        foreach($photos as &$photo){
+            $tmp_arr = explode('-++', $photos->name);
+            $photo->order = $tmp_arr[0];
+            $photo->name = $tmp_arr[1];
+        }
+        unset($photo);
+        usort($photos, 'usort_callback');
+
+        return $photos;
     }
 
 }

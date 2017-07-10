@@ -3,7 +3,10 @@
 namespace app\controllers;
 
 use Yii;
+use yii\base\InvalidParamException;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
+use app\models\ResetPasswordForm;
 use yii\filters\ContentNegotiator;
 use yii\web\Response;
 
@@ -21,10 +24,31 @@ class SiteController extends Controller
 //	    ];
 //	}
 
-	public function actionTest()
+	public function actionIndex()
 	{
-		return 123;
+		\Yii::$app->response->format = \yii\web\Response::FORMAT_HTML;
+		return $this->render('index');
 	}
+
+	public function actionResetPassword($token)
+	{
+		try {
+			$model = new ResetPasswordForm($token);
+		} catch (InvalidParamException $e) {
+			throw new BadRequestHttpException($e->getMessage());
+		}
+
+		\Yii::$app->response->format = \yii\web\Response::FORMAT_HTML;
+
+		if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+			Yii::$app->session->setFlash('success', 'New password was saved.');
+			return $this->goHome();
+		}
+
+		return $this->render('resetPassword', [
+			'model' => $model,
+		]);
+      }
 
 	private function _getStatusCodeMessage($status)
 	{

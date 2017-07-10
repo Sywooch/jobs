@@ -71,12 +71,13 @@ class ProfileController extends ActiveController
     public function actionChangeProfile()
     {
         $model = new Profile();
+        $user = Yii::$app->user->identity;
         if($model->load(Yii::$app->request->post())){
             if($model->validate() && $model->Change(Yii::$app->request->post())){
 
-                if($model->avatar) {
-                    if(!preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}'.'((:[0-9]{1,5})?\\/.*)?$/i', $model->avatar) && file_exists(getcwd().'/'.$model->avatar)){
-                        $model->avatar = 'http://vlad.urich.org/web/'.$model->avatar;
+                if($user->avatar) {
+                    if(!preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}'.'((:[0-9]{1,5})?\\/.*)?$/i', $user->avatar) && file_exists(getcwd().'/'.$user->avatar)){
+                        $user->avatar = 'http://vlad.urich.org/web/'.$user->avatar;
                     }
                 }
 
@@ -84,7 +85,7 @@ class ProfileController extends ActiveController
                     'status' => 200,
                     'message' => 'Successfully saved.',
                     'profile' => array(
-                        'photo' => $model->avatar,
+                        'photo' => $user->avatar,
                         'name' => $model->username,
                         'email' => $model->email,
                         'phone' => $model->phone,
@@ -112,8 +113,19 @@ class ProfileController extends ActiveController
     {
         $model = new Profile();
         if(Yii::$app->request->post('new_password')){
-            $response = $model->ChangePassword(Yii::$app->request->post(), Yii::$app->user->identity);
-            return $response;
+//            $response = $model->ChangePassword(Yii::$app->request->post(), Yii::$app->user->identity);
+            if($model->sendEmail(Yii::$app->user->identity))
+            {
+                return array(
+                    'status' => 200,
+                    'message' => 'Mail has been sent.'
+                );
+            } else {
+                return array(
+                    'status' => 500,
+                    'message' => 'Mail was not send.'
+                );
+            }
         } else {
             return array(
                 'status' => 400,

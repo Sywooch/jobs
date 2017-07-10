@@ -2,6 +2,7 @@
 
 namespace app\controllers\api;
 
+use app\models\Category;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\web\Response;
@@ -9,6 +10,7 @@ use yii\rest\ActiveController;
 use app\models\Post;
 use app\models\PostImages;
 use yii\web\UploadedFile;
+use yii\data\ActiveDataProvider;
 
 class PostController extends ActiveController
 {
@@ -20,6 +22,7 @@ class PostController extends ActiveController
         return [
             'view' => ['POST'],
             'create' => ['POST'],
+            'category' => ['POST'],
             'upload-post-image' => ['POST']
 //            'update' => ['PUT', 'PATCH'],
 //            'delete' => ['DELETE'],
@@ -39,10 +42,20 @@ class PostController extends ActiveController
         $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
+            'except' => ['category']
         ];
         return $behaviors;
     }
 
+    //Get Category
+    public function actionCategory()
+    {
+        $activeData = new ActiveDataProvider([
+            'query' => Category::find()->orderBy('id'),
+            'pagination' => false,
+        ]);
+        return $activeData;
+    }
 
     //Create Post
     public function actionCreate()

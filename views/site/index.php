@@ -1,0 +1,1 @@
+<h2>New password successfully saved!</h2>

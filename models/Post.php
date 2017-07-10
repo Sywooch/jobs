@@ -16,9 +16,9 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'title', 'latitude', 'longitude', 'user_id'], 'required'],
-            [['name', 'latitude', 'longitude'], 'string', 'max' => 100],
-            [['title'], 'string']
+            [['specification', 'title', 'latitude', 'longitude', 'user_id', 'price', 'category_id'], 'required'],
+            [['title', 'latitude', 'longitude'], 'string', 'max' => 100],
+            [['name'], 'string']
         ];
     }
 

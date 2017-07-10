@@ -13,7 +13,7 @@ class Profile extends User
     {
         return [
 
-            [['avatar', 'phone'], 'string', 'max' => 255],
+            [['avatar', 'phone', 'username'], 'string', 'max' => 255],
 //            ['username', 'required'],
 
             [['country', 'city'], 'string', 'max' => 100],
@@ -37,6 +37,7 @@ class Profile extends User
         $profile = Yii::$app->user->identity;
         
         $profile->username = $request['Profile']['name'];
+        $this->username = $request['Profile']['name'];
         $profile->email = $this->email;
         $profile->phone = $this->phone;
         $profile->country = $this->country;
@@ -45,22 +46,47 @@ class Profile extends User
         return $profile->save() ? $profile : null;
     }
 
-    public function ChangePassword($request, $user)
-    {
-        $current_password = $request['current_password'];
-        $new_password = $request['new_password'];
+//    public function ChangePassword($request, $user)
+//    {
+//        $current_password = $request['current_password'];
+//        $new_password = $request['new_password'];
+//
+//        if(Yii::$app->security->validatePassword($current_password, $user->password_hash)){
+//            $user->setPassword($new_password);
+//            $user->save(false);
+//            return array(
+//                'message' => 'Password successfully changed.'
+//            );
+//        } else {
+//            return array(
+//                'message' => 'Invalid current_password.'
+//            );
+//        }
+//    }
 
-        if(Yii::$app->security->validatePassword($current_password, $user->password_hash)){
-            $user->setPassword($new_password);
-            $user->save(false);
-            return array(
-                'message' => 'Password successfully changed.'
-            );
-        } else {
-            return array(
-                'message' => 'Invalid current_password.'
-            );
+    public function sendEmail($user)
+    {
+        if (!$user) {
+            return false;
         }
+
+        if (!User::isPasswordResetTokenValid($user->password_reset_token)) {
+            $user->generatePasswordResetToken();
+            if (!$user->save()) {
+                return false;
+            }
+        }
+
+        return Yii::$app
+            ->mailer
+            ->compose(
+                ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
+                ['user' => $user]
+            )
+            ->setFrom([Yii::$app->params['supportEmail'] => 'Jobs robot'])
+            ->setTo($user->email)
+            ->setSubject('Password reset for ' . Yii::$app->name)
+            ->send();
     }
 
 }
