@@ -18,7 +18,6 @@ class Post extends \yii\db\ActiveRecord
         return [
             [['specification', 'title', 'latitude', 'longitude', 'user_id', 'price', 'category_id'], 'required'],
             [['title', 'latitude', 'longitude'], 'string', 'max' => 100],
-            [['name'], 'string']
         ];
     }
 
