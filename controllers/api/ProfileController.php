@@ -19,7 +19,8 @@ class ProfileController extends ActiveController
     {
         return [
             'profile' => ['POST'],
-            'change-profile' => ['POST']
+            'change-profile' => ['POST'],
+            'change-password' => ['POST']
         ];
     }
 
@@ -103,6 +104,21 @@ class ProfileController extends ActiveController
                 'status' => 400,
                 'message' => 'Invalid parameters.'
             ]);
+        }
+    }
+
+    //Change Password
+    public function actionChangePassword()
+    {
+        $model = new Profile();
+        if(Yii::$app->request->post('new_password')){
+            $response = $model->ChangePassword(Yii::$app->request->post(), Yii::$app->user->identity);
+            return $response;
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
         }
     }
 }

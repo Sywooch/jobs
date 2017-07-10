@@ -45,4 +45,22 @@ class Profile extends User
         return $profile->save() ? $profile : null;
     }
 
+    public function ChangePassword($request, $user)
+    {
+        $current_password = $request['current_password'];
+        $new_password = $request['new_password'];
+
+        if(Yii::$app->security->validatePassword($current_password, $user->password_hash)){
+            $user->setPassword($new_password);
+            $user->save(false);
+            return array(
+                'message' => 'Password successfully changed.'
+            );
+        } else {
+            return array(
+                'message' => 'Invalid current_password.'
+            );
+        }
+    }
+
 }

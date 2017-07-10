@@ -285,7 +285,7 @@ class UserController extends ActiveController
             } else {
                 $response = array(
                     'status' => 403,
-                    'message' => 'Invalid username or password.',
+                    'message' => 'Invalid email or password.',
                 );
             }
         }
