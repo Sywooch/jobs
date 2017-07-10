@@ -14,7 +14,7 @@ class Profile extends User
         return [
 
             [['avatar', 'phone'], 'string', 'max' => 255],
-            ['username', 'required'],
+//            ['username', 'required'],
 
             [['country', 'city'], 'string', 'max' => 100],
 
@@ -36,7 +36,7 @@ class Profile extends User
     {
         $profile = Yii::$app->user->identity;
         
-        $profile->username = $this->username;
+        $profile->username = $request['Profile']['name'];
         $profile->email = $this->email;
         $profile->phone = $this->phone;
         $profile->country = $this->country;

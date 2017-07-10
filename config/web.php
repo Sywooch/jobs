@@ -46,7 +46,8 @@ $config = [
                 'api/llogin' => '/api/user/llogin',
                 'api/profile' => '/api/profile/profile',
                 'api/change-profile' => '/api/profile/change-profile',
-                'api/avatar-upload' => '/api/user/avatar-upload'
+                'api/avatar-upload' => '/api/user/avatar-upload',
+                'api/post-create' => '/api/post/create'
             ],
         ],
         'cache' => [
