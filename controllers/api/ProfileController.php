@@ -39,6 +39,13 @@ class ProfileController extends ActiveController
     {
         $user = Yii::$app->user->identity;
         if($user){
+
+            if($user->avatar) {
+                if(!preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}'.'((:[0-9]{1,5})?\\/.*)?$/i', $user->avatar) && file_exists(getcwd().'/'.$user->avatar)){
+                    $user->avatar = 'http://vlad.urich.org/web/'.$user->avatar;
+                }
+            }
+
             return array(
                 'status' => 200,
                 'profile' => array(
@@ -65,6 +72,13 @@ class ProfileController extends ActiveController
         $model = new Profile();
         if($model->load(Yii::$app->request->post())){
             if($model->validate() && $model->Change(Yii::$app->request->post())){
+
+                if($model->avatar) {
+                    if(!preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}'.'((:[0-9]{1,5})?\\/.*)?$/i', $model->avatar) && file_exists(getcwd().'/'.$model->avatar)){
+                        $model->avatar = 'http://vlad.urich.org/web/'.$model->avatar;
+                    }
+                }
+
                 return array(
                     'status' => 200,
                     'message' => 'Successfully saved.',

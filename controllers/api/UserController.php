@@ -60,6 +60,13 @@ class UserController extends ActiveController
                 $model->avatar = 'avatars/' . $imageName . '.' . $model->photo->extension;
                 $model->save(false);
             }
+
+            if($model->avatar) {
+                if(!preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}'.'((:[0-9]{1,5})?\\/.*)?$/i', $model->avatar) && file_exists(getcwd().'/'.$model->avatar)){
+                    $model->avatar = 'http://vlad.urich.org/web/'.$model->avatar;
+                }
+            }
+            
             $response = array(
                 'status' => 200,
                 'message' => 'User has been registered.',
@@ -103,7 +110,7 @@ class UserController extends ActiveController
             return array(
                 'status' => 200,
                 'message' => 'Image successfully uploaded.',
-                'photo' => $user->avatar
+                'photo' => 'http://vlad.urich.org/web/'.$user->avatar
             );
         } else {
             return array(
@@ -255,6 +262,13 @@ class UserController extends ActiveController
         if(Yii::$app->request->post()){
             if($model->login(Yii::$app->request->post())){
                 $user = $model->findByEmail(Yii::$app->request->post('email'));
+                
+                if($user->avatar) {
+                    if(!preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}'.'((:[0-9]{1,5})?\\/.*)?$/i', $user->avatar) && file_exists(getcwd().'/'.$user->avatar)){
+                        $user->avatar = 'http://vlad.urich.org/web/'.$user->avatar;
+                    }
+                }
+                
                 $response = array(
                     'status' => 200,
                     'message' => 'Successfully login.',

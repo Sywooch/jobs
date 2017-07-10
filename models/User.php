@@ -201,7 +201,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     //Facebook SignUp
     public function fregister($accessToken)
     {
-        $url = 'https://graph.facebook.com/me?fields=id,name,email,picture&access_token=' . $accessToken;
+        $url = 'https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&access_token=' . $accessToken;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -239,7 +239,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     //LinkedIn SignUp
     public function lregister($accessToken)
     {
-        $url = 'https://api.linkedin.com/v1/people/~:(id,email-address,formatted-name,picture-url)?oauth2_access_token=' . $accessToken . '&format=json';
+        $url = 'https://api.linkedin.com/v1/people/~:(id,email-address,formatted-name,picture-urls::(original))?oauth2_access_token=' . $accessToken . '&format=json';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -261,9 +261,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user->username = $result->formattedName;
         $this->username = $result->formattedName;
         $this->email = $result->emailAddress;
-        if(isset($result->pictureUrl)){
-            $user->avatar = $result->pictureUrl;
-            $this->avatar = $result->pictureUrl;
+        if(isset($result->pictureUrls)){
+            $user->avatar = $result->pictureUrls->values[0];
+            $this->avatar = $result->pictureUrls->values[0];
         } else {
             $user->avatar = 'No image';
         }
