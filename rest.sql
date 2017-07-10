@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июл 10 2017 г., 10:27
+-- Время создания: Июл 10 2017 г., 11:43
 -- Версия сервера: 5.6.31
 -- Версия PHP: 5.6.23
 
@@ -34,14 +34,16 @@ CREATE TABLE IF NOT EXISTS `post` (
   `longitude` varchar(255) NOT NULL,
   `status` tinyint(4) DEFAULT '0',
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `post`
 --
 
 INSERT INTO `post` (`id`, `name`, `title`, `latitude`, `longitude`, `status`, `user_id`) VALUES
-(1, 'New Post', 'new title', 'latitude', 'longitude', 0, 49);
+(1, 'New Post', 'new title', 'latitude', 'longitude', 0, 49),
+(2, 'New Post', 'new title', 'latitude', 'longitude', 0, 49),
+(3, 'New Post', 'new title', 'latitude', 'longitude', 0, 49);
 
 -- --------------------------------------------------------
 
@@ -53,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `post_image` (
   `id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -106,6 +108,7 @@ ALTER TABLE `post`
 -- Индексы таблицы `post_image`
 --
 ALTER TABLE `post_image`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `post_image_ibfk_1` (`post_id`);
 
 --
@@ -124,7 +127,12 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT для таблицы `post_image`
+--
+ALTER TABLE `post_image`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --

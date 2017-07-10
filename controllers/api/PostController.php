@@ -6,8 +6,8 @@ use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\web\Response;
 use yii\rest\ActiveController;
-use app\models\User;
 use app\models\Post;
+use app\models\PostImages;
 use yii\web\UploadedFile;
 
 class PostController extends ActiveController
@@ -20,6 +20,7 @@ class PostController extends ActiveController
         return [
             'view' => ['POST'],
             'create' => ['POST'],
+            'upload-post-image' => ['POST']
 //            'update' => ['PUT', 'PATCH'],
 //            'delete' => ['DELETE'],
         ];
@@ -53,7 +54,8 @@ class PostController extends ActiveController
             if($post->save()){
                 return array(
                     'status' => 200,
-                    'message' => 'Post successfully saved.'
+                    'message' => 'Post successfully saved.',
+                    'post_id' => $post->id
                 );
             } else {
                 return array(
@@ -65,6 +67,33 @@ class PostController extends ActiveController
             return array(
                 'status' => 400,
                 'message' => 'Bad parameters.'
+            );
+        }
+    }
+    
+    //Upload Images to Post
+    public function actionUploadPostImage()
+    {
+        $model = new PostImages();
+        if(Yii::$app->request->post('post_id')){
+            $photos = UploadedFile::getInstancesByName("photo");
+            if($photos){
+                $result = $model->upload($photos, Yii::$app->request->post('post_id'));
+                return array(
+                    'status' => 200,
+                    'message' => 'Photos successfully saved.',
+                    'photos' => $result
+                );
+            } else {
+                return array(
+                    'status' => 400,
+                    'message' => 'Photos not found.'
+                );
+            }
+        } else {
+            return array(
+                'status' => '400',
+                'message' => 'Missing post_id.'
             );
         }
     }
