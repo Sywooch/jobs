@@ -23,9 +23,9 @@ class PostController extends ActiveController
             'view' => ['POST'],
             'create' => ['POST'],
             'update' => ['POST'],
+            'delete' => ['POST'],
             'category' => ['POST'],
             'upload-post-image' => ['POST']
-//            'delete' => ['DELETE'],
         ];
     }
 
@@ -33,6 +33,7 @@ class PostController extends ActiveController
         $actions = parent::actions();
         unset($actions['create']);
         unset($actions['update']);
+        unset($actions['delete']);
         return $actions;
     }
 
@@ -108,6 +109,37 @@ class PostController extends ActiveController
                     return array(
                         'status' => 400,
                         'message' => 'Can\'t update post.'
+                    );
+                }
+            } else {
+                return array(
+                    'status' => 404,
+                    'message' => 'Post not found.'
+                );
+            }
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Delete Post
+    public function actionDelete()
+    {
+        if(Yii::$app->request->post('id')){
+            $post = Post::findOne(['id' => Yii::$app->request->post('id')]);
+            if($post){
+                if($post->delete()){
+                    return array(
+                        'status' => 200,
+                        'message' => 'Post successfully deleted.'
+                    );
+                } else {
+                    return array(
+                        'status' => 500,
+                        'message' => 'Can\'t delete post.'
                     );
                 }
             } else {
