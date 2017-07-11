@@ -22,9 +22,9 @@ class PostController extends ActiveController
         return [
             'view' => ['POST'],
             'create' => ['POST'],
+            'update' => ['POST'],
             'category' => ['POST'],
             'upload-post-image' => ['POST']
-//            'update' => ['PUT', 'PATCH'],
 //            'delete' => ['DELETE'],
         ];
     }
@@ -32,6 +32,7 @@ class PostController extends ActiveController
     public function actions(){
         $actions = parent::actions();
         unset($actions['create']);
+        unset($actions['update']);
         return $actions;
     }
 
@@ -83,6 +84,45 @@ class PostController extends ActiveController
             );
         }
     }
+
+    //Update Post
+    public function actionUpdate()
+    {
+        if(Yii::$app->request->post('post_id')){
+            $request = Yii::$app->request->post();
+            $post = Post::findOne(['id' => Yii::$app->request->post('post_id')]);
+            if($post){
+                $post->title = $request['title'];
+                $post->specification = $request['specification'];
+                $post->latitude = $request['latitude'];
+                $post->longitude = $request['longitude'];
+                $post->price = $request['price'];
+                $post->category_id = $request['category_id'];
+                if($post->save()){
+                    return array(
+                        'status' => 200,
+                        'message' => 'Post successfully updated.',
+                        'post' => $post
+                    );
+                } else{
+                    return array(
+                        'status' => 400,
+                        'message' => 'Can\'t update post.'
+                    );
+                }
+            } else {
+                return array(
+                    'status' => 404,
+                    'message' => 'Post not found.'
+                );
+            }
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
     
     //Upload Images to Post
     public function actionUploadPostImage()
@@ -107,6 +147,26 @@ class PostController extends ActiveController
             return array(
                 'status' => '400',
                 'message' => 'Missing post_id.'
+            );
+        }
+    }
+
+    //Bulk delete post images
+    public function actionDeletePostImage()
+    {
+        $model = new PostImages();
+        if(Yii::$app->request->post('image_ids')){
+            $request = Yii::$app->request->post('image_ids');
+            if($model->deletePhoto($request)){
+                return array(
+                    'status' => 200,
+                    'message' => 'Images successfully deleted.'
+                );
+            }
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
             );
         }
     }

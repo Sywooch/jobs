@@ -6,11 +6,6 @@ $config = [
     'id' => 'rest-api',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-//    'modules' => [
-//        'api' => [
-//            'class' => 'app\modules\api\ApiModule',
-//        ]
-//    ],
     'components' => [
         'request' => [
             'baseUrl'=> '',
@@ -50,7 +45,9 @@ $config = [
                 'api/avatar-upload' => '/api/user/avatar-upload',
                 'api/category' => '/api/post/category',
                 'api/post-create' => '/api/post/create',
+                'api/post-update' => '/api/post/update',
                 'api/post-image' => '/api/post/upload-post-image',
+                'api/post-image-delete' => '/api/post/delete-post-image'
             ],
         ],
         'cache' => [

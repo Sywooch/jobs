@@ -25,10 +25,26 @@ class PostImages extends \yii\db\ActiveRecord
         ];
     }
     
+    public function deletePhoto($request)
+    {
+        if(isset($request)){
+            foreach($request as $item){
+                $image = PostImages::findOne(['id' => $item['id']]);
+                if(file_exists(getcwd().'/'.$image->image)){
+                    unlink(getcwd().'/'.$image->image);
+                    $image->delete();
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public function upload($photos, $post_id)
     {
         if(isset($photos)){
-//            var_dump($this->sortPhoto($photos));die;
+            $photos = $this->sortPhoto($photos);
             foreach($photos as $photo){
                 $model = new PostImages();
                 $imageName = uniqid();
@@ -37,6 +53,7 @@ class PostImages extends \yii\db\ActiveRecord
                 $model->post_id = $post_id;
                 $model->save(false);
                 $result[] = array(
+                    'id' => $model->id,
                     'photo' => 'http://vlad.urich.org/web/'.$model->image
                 );
             }
@@ -47,17 +64,18 @@ class PostImages extends \yii\db\ActiveRecord
     }
 
     public function sortPhoto($photos){
-//        $str=strpos($photo, "-++");
-//        $row=substr($row, 0, $str);
-        foreach($photos as &$photo){
-            $tmp_arr = explode('-++', $photos->name);
-            $photo->order = $tmp_arr[0];
-            $photo->name = $tmp_arr[1];
-        }
-        unset($photo);
-        usort($photos, 'usort_callback');
+        usort($photos, array($this, "usort_callback"));
 
         return $photos;
+    }
+
+    static function usort_callback($param_1, $param_2) {
+        $order_param_1 = substr($param_1->name, 0, strpos($param_1->name, "-+jobs+"));
+        $order_param_2 = substr($param_2->name, 0, strpos($param_2->name, "-+jobs+"));
+        if ($order_param_1 == $order_param_2) {
+            return 0;
+        }
+        return ($order_param_1 < $order_param_2) ? -1 : 1;
     }
 
 }
