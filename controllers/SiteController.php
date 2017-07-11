@@ -24,10 +24,10 @@ class SiteController extends Controller
 //	    ];
 //	}
 
-	public function actionIndex()
+	public function actionComplete()
 	{
 		\Yii::$app->response->format = \yii\web\Response::FORMAT_HTML;
-		return $this->render('index');
+		return $this->render('complete');
 	}
 
 	public function actionResetPassword($token)
@@ -42,7 +42,7 @@ class SiteController extends Controller
 
 		if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
 			Yii::$app->session->setFlash('success', 'New password was saved.');
-			return $this->goHome();
+			return $this->redirect('complete');
 		}
 
 		return $this->render('resetPassword', [
