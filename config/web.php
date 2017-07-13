@@ -48,7 +48,9 @@ $config = [
                 'api/post-update' => '/api/post/update',
                 'api/post-delete' => '/api/post/delete',
                 'api/post-image' => '/api/post/upload-post-image',
-                'api/post-image-delete' => '/api/post/delete-post-image'
+                'api/post-image-delete' => '/api/post/delete-post-image',
+                'api/user-posts' => '/api/post/user-posts',
+                'api/posts-by-category' => '/api/post/posts-by-category'
             ],
         ],
         'cache' => [

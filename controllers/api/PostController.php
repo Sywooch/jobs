@@ -25,7 +25,8 @@ class PostController extends ActiveController
             'update' => ['POST'],
             'delete' => ['POST'],
             'category' => ['POST'],
-            'upload-post-image' => ['POST']
+            'upload-post-image' => ['POST'],
+            'user-posts' => ['POST'],
         ];
     }
 
@@ -195,6 +196,47 @@ class PostController extends ActiveController
                     'message' => 'Images successfully deleted.'
                 );
             }
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Get all posts by user token
+    public function actionUserPosts()
+    {
+        $user = Yii::$app->user->identity;
+        if(Yii::$app->request->post() && $user){
+            $dataProvider = new ActiveDataProvider([
+                'query' => Post::find()
+                    ->select(['id', 'title', 'specification', 'price', 'category_id', 'latitude', 'longitude', 'user_id'])
+                    ->where(['user_id' => $user->id]),
+                'pagination' => false
+            ]);
+            return $dataProvider;
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Get posts by category
+    public function actionPostsByCategory()
+    {
+        if(Yii::$app->request->post('category_id')){
+            $dataProvider = new ActiveDataProvider([
+                'query' => Post::find()
+                    ->select(['id', 'title', 'specification', 'price', 'category_id', 'latitude', 'longitude', 'user_id'])
+                    ->where(['category_id' => Yii::$app->request->post('category_id')]),
+                'pagination' => [
+                    'pageSize' => 10,
+                ]
+            ]);
+            return $dataProvider;
         } else {
             return array(
                 'status' => 400,
