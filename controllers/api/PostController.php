@@ -2,13 +2,14 @@
 
 namespace app\controllers\api;
 
-use app\models\Category;
 use Yii;
+use yii\data\SqlDataProvider;
 use yii\filters\auth\HttpBearerAuth;
 use yii\web\Response;
 use yii\rest\ActiveController;
 use app\models\Post;
 use app\models\PostImages;
+use app\models\Category;
 use yii\web\UploadedFile;
 use yii\data\ActiveDataProvider;
 
@@ -207,15 +208,10 @@ class PostController extends ActiveController
     //Get all posts by user token
     public function actionUserPosts()
     {
+        $model = new Post();
         $user = Yii::$app->user->identity;
         if(Yii::$app->request->post() && $user){
-            $dataProvider = new ActiveDataProvider([
-                'query' => Post::find()
-                    ->select(['id', 'title', 'specification', 'price', 'category_id', 'latitude', 'longitude', 'user_id'])
-                    ->where(['user_id' => $user->id]),
-                'pagination' => false
-            ]);
-            return $dataProvider;
+            return $model->UserPosts($user);
         } else {
             return array(
                 'status' => 400,
@@ -227,16 +223,23 @@ class PostController extends ActiveController
     //Get posts by category
     public function actionPostsByCategory()
     {
+        $model = new Post();
         if(Yii::$app->request->post('category_id')){
-            $dataProvider = new ActiveDataProvider([
-                'query' => Post::find()
-                    ->select(['id', 'title', 'specification', 'price', 'category_id', 'latitude', 'longitude', 'user_id'])
-                    ->where(['category_id' => Yii::$app->request->post('category_id')]),
-                'pagination' => [
-                    'pageSize' => 10,
-                ]
-            ]);
-            return $dataProvider;
+            return $model->PostsByCategory(Yii::$app->request->post('category_id'));
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Get One post by id
+    public function actionGetPost()
+    {
+        $model = new Post();
+        if(Yii::$app->request->post('post_id')){
+            return $model->GetPost(Yii::$app->request->post('post_id'));
         } else {
             return array(
                 'status' => 400,

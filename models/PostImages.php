@@ -24,6 +24,11 @@ class PostImages extends \yii\db\ActiveRecord
             [['post_id'], 'integer']
         ];
     }
+
+    public function getPost()
+    {
+        return $this->hasOne(Post::className(), ['id' => 'post_id']);
+    }
     
     public function deletePhoto($request)
     {

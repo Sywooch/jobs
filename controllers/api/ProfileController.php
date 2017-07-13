@@ -50,6 +50,7 @@ class ProfileController extends ActiveController
             return array(
                 'status' => 200,
                 'profile' => array(
+                    'id' => $user->id,
                     'photo' => $user->avatar,
                     'name' => $user->username,
                     'email' => $user->email,
@@ -85,6 +86,7 @@ class ProfileController extends ActiveController
                     'status' => 200,
                     'message' => 'Successfully saved.',
                     'profile' => array(
+                        'id' => $user->id,
                         'photo' => $user->avatar,
                         'name' => $model->username,
                         'email' => $model->email,

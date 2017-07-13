@@ -50,7 +50,8 @@ $config = [
                 'api/post-image' => '/api/post/upload-post-image',
                 'api/post-image-delete' => '/api/post/delete-post-image',
                 'api/user-posts' => '/api/post/user-posts',
-                'api/posts-by-category' => '/api/post/posts-by-category'
+                'api/posts-by-category' => '/api/post/posts-by-category',
+                'api/get-post' => '/api/post/get-post'
             ],
         ],
         'cache' => [
