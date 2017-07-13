@@ -66,7 +66,7 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT  post.id, 
-                            post.title, post.price, post_image.image
+                            post.title, post.price, post.specification, post_image.image
                           FROM post
                           LEFT JOIN post_image 
                           ON post.id = post_image.post_id 
