@@ -27,6 +27,7 @@ class PostController extends ActiveController
             'category' => ['POST'],
             'upload-post-image' => ['POST'],
             'user-posts' => ['POST'],
+            'get-post-images' => ['POST']
         ];
     }
 
@@ -239,6 +240,25 @@ class PostController extends ActiveController
         $model = new Post();
         if(Yii::$app->request->post('post_id')){
             return $model->GetPost(Yii::$app->request->post('post_id'));
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Get all images by post id
+    public function actionGetPostImages()
+    {
+        if(Yii::$app->request->post('post_id')){
+            $dataProvider = new ActiveDataProvider([
+                'query' => PostImages::find()
+                    ->select(['id', 'image'])
+                    ->where(['post_id' => Yii::$app->request->post('post_id')]),
+                'pagination' => false
+            ]);
+            return $dataProvider;
         } else {
             return array(
                 'status' => 400,

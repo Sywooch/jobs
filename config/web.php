@@ -52,7 +52,7 @@ $config = [
                 'api/user-posts' => '/api/post/user-posts',
                 'api/posts-by-category' => '/api/post/posts-by-category',
                 'api/get-post' => '/api/post/get-post',
-
+                'api/get-post-images' => '/api/post/get-post-images',
                 'api/add-favorite' => '/api/favorite/add-favorite',
                 'api/favorites' => '/api/favorite/favorites',
                 'api/remove-favorite' => '/api/favorite/remove-favorite',
