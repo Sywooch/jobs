@@ -2,9 +2,9 @@
 -- version 4.4.15.7
 -- http://www.phpmyadmin.net
 --
--- Хост: 127.0.0.1:3306
--- Время создания: Июл 10 2017 г., 16:10
--- Версия сервера: 5.6.31
+-- Хост: 127.0.0.1:3307
+-- Время создания: Июл 16 2017 г., 17:20
+-- Версия сервера: 5.5.50
 -- Версия PHP: 5.6.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -42,6 +42,26 @@ INSERT INTO `category` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `favorites`
+--
+
+CREATE TABLE IF NOT EXISTS `favorites` (
+  `id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `favorites`
+--
+
+INSERT INTO `favorites` (`id`, `post_id`, `user_id`) VALUES
+(2, 5, 1),
+(3, 4, 4);
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `post`
 --
 
@@ -55,14 +75,15 @@ CREATE TABLE IF NOT EXISTS `post` (
   `longitude` varchar(255) NOT NULL,
   `status` tinyint(4) DEFAULT '0',
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `post`
 --
 
 INSERT INTO `post` (`id`, `specification`, `title`, `price`, `category_id`, `latitude`, `longitude`, `status`, `user_id`) VALUES
-(4, 'good post', 'New title', 450.5, 1, 'latitude', 'longitude', 0, 1);
+(4, 'good post', 'New title', 450.5, 1, 'latitude', 'longitude', 0, 1),
+(5, 'rtyrtyrty', 'rtydfgfd', 3345, 2, '123345145', '3452561435', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -74,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `post_image` (
   `id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -123,6 +144,14 @@ ALTER TABLE `category`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `favorites`
+--
+ALTER TABLE `favorites`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `favorites_ibfk_2` (`user_id`),
+  ADD KEY `favorites_ibfk_1` (`post_id`);
+
+--
 -- Индексы таблицы `post`
 --
 ALTER TABLE `post`
@@ -155,15 +184,20 @@ ALTER TABLE `user`
 ALTER TABLE `category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
+-- AUTO_INCREMENT для таблицы `favorites`
+--
+ALTER TABLE `favorites`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
 -- AUTO_INCREMENT для таблицы `post`
 --
 ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT для таблицы `post_image`
 --
 ALTER TABLE `post_image`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
@@ -172,6 +206,13 @@ ALTER TABLE `user`
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
+
+--
+-- Ограничения внешнего ключа таблицы `favorites`
+--
+ALTER TABLE `favorites`
+  ADD CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `favorites_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `post`

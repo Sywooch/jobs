@@ -32,13 +32,13 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT  post.id, 
-                            post.title, post.price, post_image.image
-                          FROM post   
-                          LEFT JOIN post_image 
-                          ON post.id = post_image.post_id 
-                          WHERE post.user_id = {$user->id}
-                          AND post.status = 0
-                          GROUP BY post.id",
+                post.title, post.price, post_image.image
+                FROM post   
+                LEFT JOIN post_image 
+                ON post.id = post_image.post_id 
+                WHERE post.user_id = {$user->id}
+                AND post.status = 0
+                GROUP BY post.id",
             'pagination' => false,
         ] );
         return $dataProvider;
@@ -49,13 +49,13 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT  post.id, 
-                            post.title, post.price, post_image.image
-                          FROM post
-                          LEFT JOIN post_image 
-                          ON post.id = post_image.post_id 
-                          WHERE post.category_id = {$category_id}
-                          AND post.status = 0
-                          GROUP BY post.id",
+                post.title, post.price, post_image.image
+                FROM post
+                LEFT JOIN post_image 
+                ON post.id = post_image.post_id 
+                WHERE post.category_id = {$category_id}
+                AND post.status = 0
+                GROUP BY post.id",
             'pagination' => [
                 'pageSize' => 10,
             ]
@@ -68,12 +68,12 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT  post.id, 
-                            post.title, post.price, post.specification, post_image.image
-                          FROM post
-                          LEFT JOIN post_image 
-                          ON post.id = post_image.post_id 
-                          WHERE post.id = {$post_id}
-                          GROUP BY post.id",
+                post.title, post.price, post.specification, post_image.image
+                FROM post
+                LEFT JOIN post_image 
+                ON post.id = post_image.post_id 
+                WHERE post.id = {$post_id}
+                GROUP BY post.id",
             'pagination' => [
                 'pageSize' => 10,
             ]

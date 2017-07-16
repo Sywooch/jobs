@@ -51,7 +51,11 @@ $config = [
                 'api/post-image-delete' => '/api/post/delete-post-image',
                 'api/user-posts' => '/api/post/user-posts',
                 'api/posts-by-category' => '/api/post/posts-by-category',
-                'api/get-post' => '/api/post/get-post'
+                'api/get-post' => '/api/post/get-post',
+
+                'api/add-favorite' => '/api/favorite/add-favorite',
+                'api/favorites' => '/api/favorite/favorites',
+                'api/remove-favorite' => '/api/favorite/remove-favorite',
             ],
         ],
         'cache' => [

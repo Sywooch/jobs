@@ -3,7 +3,6 @@
 namespace app\controllers\api;
 
 use Yii;
-use yii\data\SqlDataProvider;
 use yii\filters\auth\HttpBearerAuth;
 use yii\web\Response;
 use yii\rest\ActiveController;
