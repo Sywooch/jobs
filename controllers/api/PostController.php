@@ -239,8 +239,9 @@ class PostController extends ActiveController
     public function actionGetPost()
     {
         $model = new Post();
+        $user = Yii::$app->user->identity;
         if(Yii::$app->request->post('post_id')){
-            return $model->GetPost(Yii::$app->request->post('post_id'));
+            return $model->GetPost(Yii::$app->request->post('post_id'), $user->id);
         } else {
             return array(
                 'status' => 400,

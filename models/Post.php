@@ -64,21 +64,36 @@ class Post extends \yii\db\ActiveRecord
     }
 
     //Get single post
-    public function GetPost($post_id)
+    public function GetPost($post_id, $user_id)
     {
-        $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT  post.id, 
-                post.title, post.price, post.specification, post_image.image
-                FROM post
-                LEFT JOIN post_image 
-                ON post.id = post_image.post_id 
-                WHERE post.id = {$post_id}
-                GROUP BY post.id",
-            'pagination' => [
-                'pageSize' => 10,
-            ]
-        ]);
-        return $dataProvider;
+        $flag = 'NO';
+
+        $post = Post::find()
+            ->where(['id' => $post_id])
+            ->one();
+
+        $favorite = Favorites::find()
+            ->where(['post_id' => $post_id, 'user_id' => $user_id])
+            ->one();
+
+        if(isset($favorite)){
+            $flag = 'YES';
+        }
+
+        $response = [
+            array(
+                'id' => $post->id,
+                'title' => $post->title,
+                'price' => $post->price,
+                'specification' => $post->specification,
+                'isFavorite' => $flag,
+                'creatorId' => $post->user_id,
+                'latitude' => $post->latitude,
+                'longitude' => $post->longitude
+            )
+        ];
+
+        return $response;
     }
 
     //Search post by title
