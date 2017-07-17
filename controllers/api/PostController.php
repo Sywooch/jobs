@@ -27,7 +27,8 @@ class PostController extends ActiveController
             'category' => ['POST'],
             'upload-post-image' => ['POST'],
             'user-posts' => ['POST'],
-            'get-post-images' => ['POST']
+            'get-post-images' => ['POST'],
+            'post-search' => ['POST']
         ];
     }
 
@@ -259,6 +260,20 @@ class PostController extends ActiveController
                 'pagination' => false
             ]);
             return $dataProvider;
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Post Serach by title
+    public function actionPostSearch()
+    {
+        $model = new Post();
+        if(Yii::$app->request->post()){
+            return $model->PostSearch(Yii::$app->request->post('search_title'));
         } else {
             return array(
                 'status' => 400,

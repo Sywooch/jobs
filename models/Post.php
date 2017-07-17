@@ -81,4 +81,24 @@ class Post extends \yii\db\ActiveRecord
         return $dataProvider;
     }
 
+    //Search post by title
+    public function PostSearch($title)
+    {
+        $dataProvider = new SqlDataProvider([
+            'sql' => "SELECT  post.id, 
+                post.title, post.price, post_image.image
+                FROM post
+                LEFT JOIN post_image 
+                ON post.id = post_image.post_id 
+                AND post.status = 0
+                WHERE post.title LIKE '%{$title}%'
+                GROUP BY post.id DESC",
+            'pagination' => [
+                'pageSize' => 10,
+            ]
+        ]);
+
+        return $dataProvider;
+    }
+
 }

@@ -49,6 +49,7 @@ $config = [
                 'api/post-delete' => '/api/post/delete',
                 'api/post-image' => '/api/post/upload-post-image',
                 'api/post-image-delete' => '/api/post/delete-post-image',
+                'api/post-search' => '/api/post/post-search',
                 'api/user-posts' => '/api/post/user-posts',
                 'api/posts-by-category' => '/api/post/posts-by-category',
                 'api/get-post' => '/api/post/get-post',
