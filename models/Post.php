@@ -27,6 +27,11 @@ class Post extends \yii\db\ActiveRecord
         return $this->hasMany(PostImages::className(), ['post_id' => 'id']);
     }
 
+    public function getCategory()
+    {
+        return $this->hasOne(Category::className(), ['category_id' => 'category.id']);
+    }
+
     //get all user posts
     public function UserPosts($user)
     {
@@ -38,7 +43,7 @@ class Post extends \yii\db\ActiveRecord
                 ON post.id = post_image.post_id 
                 WHERE post.user_id = {$user->id}
                 AND post.status = 0
-                GROUP BY post.id",
+                GROUP BY post.id DESC",
             'pagination' => false,
         ] );
         return $dataProvider;
@@ -55,7 +60,7 @@ class Post extends \yii\db\ActiveRecord
                 ON post.id = post_image.post_id 
                 WHERE post.category_id = {$category_id}
                 AND post.status = 0
-                GROUP BY post.id",
+                GROUP BY post.id DESC",
             'pagination' => [
                 'pageSize' => 10,
             ]
@@ -69,7 +74,8 @@ class Post extends \yii\db\ActiveRecord
         $flag = 'NO';
 
         $post = Post::find()
-            ->where(['id' => $post_id])
+            ->joinWith(['category'])
+            ->where(['post.id' => $post_id])
             ->one();
 
         $favorite = Favorites::find()
@@ -89,7 +95,8 @@ class Post extends \yii\db\ActiveRecord
                 'isFavorite' => $flag,
                 'creatorId' => $post->user_id,
                 'latitude' => $post->latitude,
-                'longitude' => $post->longitude
+                'longitude' => $post->longitude,
+                'categoryName' => $post->category->name
             )
         ];
 
