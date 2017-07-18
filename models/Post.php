@@ -29,7 +29,7 @@ class Post extends \yii\db\ActiveRecord
 
     public function getCategory()
     {
-        return $this->hasOne(Category::className(), ['category_id' => 'category.id']);
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
     //get all user posts
