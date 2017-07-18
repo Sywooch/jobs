@@ -2,9 +2,9 @@
 -- version 4.4.15.7
 -- http://www.phpmyadmin.net
 --
--- Хост: 127.0.0.1:3307
--- Время создания: Июл 16 2017 г., 17:20
--- Версия сервера: 5.5.50
+-- Хост: 127.0.0.1:3306
+-- Время создания: Июл 18 2017 г., 16:01
+-- Версия сервера: 5.6.31
 -- Версия PHP: 5.6.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -28,16 +28,17 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `category` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `name` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `category`
 --
 
-INSERT INTO `category` (`id`, `name`) VALUES
-(1, 'Home repairs'),
-(2, 'Car repairs');
+INSERT INTO `category` (`id`, `name`, `image`) VALUES
+(1, 'Home repairs', 'category_image/5964832fdaad3.jpg'),
+(2, 'Car repairs', 'category_image/5964832fdabgad3.jpg');
 
 -- --------------------------------------------------------
 
@@ -49,15 +50,14 @@ CREATE TABLE IF NOT EXISTS `favorites` (
   `id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `favorites`
 --
 
 INSERT INTO `favorites` (`id`, `post_id`, `user_id`) VALUES
-(2, 5, 1),
-(3, 4, 4);
+(4, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS `post` (
 --
 
 INSERT INTO `post` (`id`, `specification`, `title`, `price`, `category_id`, `latitude`, `longitude`, `status`, `user_id`) VALUES
-(4, 'good post', 'New title', 450.5, 1, 'latitude', 'longitude', 0, 1),
-(5, 'rtyrtyrty', 'rtydfgfd', 3345, 2, '123345145', '3452561435', 0, 1);
+(4, 'gdddddddddood post', 'Test title', 500, 2, 'laasdasdtitude', 'longadsasditude', 0, 1),
+(5, 'test', 'dskfgsdfg', 22, 1, '123', '123312', 0, 4);
 
 -- --------------------------------------------------------
 
@@ -95,7 +95,16 @@ CREATE TABLE IF NOT EXISTS `post_image` (
   `id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `post_image`
+--
+
+INSERT INTO `post_image` (`id`, `post_id`, `image`) VALUES
+(13, 4, 'post_image/5964832fdaad3.jpg'),
+(14, 4, 'post_image/5964832fdca81.jpg'),
+(15, 4, 'post_image/5964832fdd4f8.jpg');
 
 -- --------------------------------------------------------
 
@@ -124,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`id`, `avatar`, `username`, `phone`, `country`, `city`, `auth_key`, `password_hash`, `password_reset_token`, `email`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'No image', 'Admin2', '+380961349361', 'Ukraine', 'Dnepr', 'UTo8q7LX4oqzNWicwZE7txlyFy8QQlXf', '$2y$13$Cpfx0YCGiAurf8BSEXwfBuZU0xChbf7xa.oAwrA4EVVPRMJg17soe', NULL, 'prybylov.v@gmail.com', 10, 1490176869, 1499691421),
+(1, 'No image', 'Admin2', '+380961349361', 'Ukraine', 'Dnepr', 'UTo8q7LX4oqzNWicwZE7txlyFy8QQlXf', '$2y$13$Cpfx0YCGiAurf8BSEXwfBuZU0xChbf7xa.oAwrA4EVVPRMJg17soe', NULL, 'prybylov.v@gmail.com', 10, 1490176869, 1499693246),
 (4, NULL, 'vasya', NULL, NULL, NULL, 'UTo8q7LX4oqzNWicwZE7txFy8QQlXf', '$2y$13$jdKfU1vtbmHEY.P8Wg7W4.40CHL7BZU5yKbjnWsY0qtg2.a58V81S', NULL, 'vlad.vasyakot@mail.ru', 10, 1490185426, 1498065976),
 (25, NULL, 'Ivan', '+380965789561', 'Ukraine', 'Dnepr', 'QMUgL-s73gweAoRId7DtaGox5RvnQM6M', '$2y$13$IvaNOxMlXmjR5R92b.JQpeJXTPQtajd6bTvZ871lbpwj5qEK3RVQu', NULL, 'gogo@gmail.com', 10, 1498927666, 1498927666),
 (32, NULL, 'Test', '+380965789361', 'Ukraine', 'Dnepr', 'g9wWgZJYX7RfFb27IVjmMXITEm4_Bs71', '$2y$13$bQdW/E87rLC77JYo/nnTbuN6eM5K5t9T4ROizsCLwHB.2V99ZtXE2', NULL, 'test@gmail.com', 10, 1499068290, 1499068290),
@@ -187,7 +196,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT для таблицы `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT для таблицы `post`
 --
@@ -197,7 +206,7 @@ ALTER TABLE `post`
 -- AUTO_INCREMENT для таблицы `post_image`
 --
 ALTER TABLE `post_image`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
