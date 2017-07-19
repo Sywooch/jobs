@@ -54,10 +54,11 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT  post.id, 
-                post.title, post.price, post_image.image
+                post.title, post.price, post_image.image, post.category_id AS categoryID
                 FROM post
                 LEFT JOIN post_image 
-                ON post.id = post_image.post_id 
+                ON post.id = post_image.post_id
+                JOIN category 
                 WHERE post.category_id = {$category_id}
                 AND post.status = 0
                 GROUP BY post.id DESC",
