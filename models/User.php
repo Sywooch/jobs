@@ -298,8 +298,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $token_device = $request['token_device'];
         if($user){
             if(Yii::$app->security->validatePassword($request['password'], $user->password_hash)){
-                if($user->token_device != $request['token_device']){
-                    $user->token_device = $request['token_device'];
+                if($user->token_device != $token_device){
+                    $user->token_device = $token_device;
                     $user->save(false);
                 }
                 return true;
