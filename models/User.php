@@ -186,8 +186,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         if($this->findByEmail($result->email)){
             $user = $this->findByEmail($result->email);
             $this->auth_key = $user->auth_key;
-            if($user->device_token != $token_device){
-                $user->device_token = $token_device;
+            if($user->token_device != $token_device){
+                $user->token_device = $token_device;
                 $user->save(false);
             }
             return $this->auth_key;
@@ -225,8 +225,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         if($this->findByEmail($result->email)){
             $user = $this->findByEmail($result->email);
             $this->auth_key = $user->auth_key;
-            if($user->device_token != $token_device){
-                $user->device_token = $token_device;
+            if($user->token_device != $token_device){
+                $user->token_device = $token_device;
                 $user->save(false);
             }
         }
@@ -269,8 +269,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         if($this->findByEmail($result->emailAddress)){
             $user = $this->findByEmail($result->email);
             $this->auth_key = $user->auth_key;
-            if($user->device_token != $token_device){
-                $user->device_token = $token_device;
+            if($user->token_device != $token_device){
+                $user->token_device = $token_device;
                 $user->save(false);
             }
         }
