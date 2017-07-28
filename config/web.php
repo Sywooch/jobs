@@ -7,6 +7,15 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
+        'apns' => [
+            'class' => 'bryglen\apnsgcm\Apns',
+            'environment' => \bryglen\apnsgcm\Apns::ENVIRONMENT_SANDBOX,
+            'pemFile' => dirname(__FILE__).'/apnssert/production.pem',
+            // 'retryTimes' => 3,
+            'options' => [
+                'sendRetryTimes' => 5
+            ]
+        ],
         'request' => [
             'baseUrl'=> '',
             'enableCookieValidation' => false,
@@ -57,6 +66,7 @@ $config = [
                 'api/add-favorite' => '/api/favorite/add-favorite',
                 'api/favorites' => '/api/favorite/favorites',
                 'api/remove-favorite' => '/api/favorite/remove-favorite',
+                'api/push' => '/api/user/push'
             ],
         ],
         'cache' => [
