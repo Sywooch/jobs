@@ -55,10 +55,6 @@ class UserController extends ActiveController
         $token = '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad147';
         if($apns->send($token, 'Ho ho ho!!!',
             [
-                'customProperty_1' => 'Hello',
-                'customProperty_2' => 'World'
-            ],
-            [
                 'sound' => 'default',
                 'badge' => 1
             ]
@@ -144,7 +140,7 @@ class UserController extends ActiveController
     public function actionGlogin()
     {
         $model = new User();
-        if(Yii::$app->request->post('token') && $model->gregister(Yii::$app->request->post('token'))){
+        if(Yii::$app->request->post('token') && $model->gregister(Yii::$app->request->post('token'), Yii::$app->request->post('token_device'))){
             if(isset($model->auth_key)){
                 $user = $model->findIdentityByAccessToken($model->auth_key);
                 $response = array(
@@ -189,7 +185,7 @@ class UserController extends ActiveController
     public function actionFlogin()
     {
         $model = new User();
-        if(Yii::$app->request->post('token') && $model->fregister(Yii::$app->request->post('token'))){
+        if(Yii::$app->request->post('token') && $model->fregister(Yii::$app->request->post('token'), Yii::$app->request->post('token_device'))){
             if(isset($model->auth_key)){
                 $user = $model->findIdentityByAccessToken($model->auth_key);
                 $response = array(
@@ -234,7 +230,7 @@ class UserController extends ActiveController
     public function actionLlogin()
     {
         $model = new User();
-        if(Yii::$app->request->post('token') && $model->lregister(Yii::$app->request->post('token'))){
+        if(Yii::$app->request->post('token') && $model->lregister(Yii::$app->request->post('token'), Yii::$app->request->post('token_device'))){
             if(isset($model->auth_key)){
                 $user = $model->findIdentityByAccessToken($model->auth_key);
                 $response = array(

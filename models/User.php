@@ -25,7 +25,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
 
-            [['avatar'], 'string', 'max' => 255],
+            [['avatar', 'token_device'], 'string', 'max' => 255],
 //            ['username', 'required'],
 
             [['country', 'city'], 'string', 'max' => 100],
@@ -157,6 +157,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user->phone = $this->phone;
         $user->country = $this->country;
         $user->city = $this->city;
+        $user->token_device = $request['User']['token_device'];
         $user->setPassword($request['User']['password']);
         $user->generateAuthKey();
         $user->status = 10;
@@ -165,7 +166,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
 
     //Google SignUp
-    public function gregister($accessToken)
+    public function gregister($accessToken, $token_device)
     {
         $url = 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' . $accessToken;
 
@@ -183,7 +184,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user = new User();
         $user->email = $result->email;
         if($this->findByEmail($result->email)){
-            $this->auth_key = $this->findByEmail($result->email)->auth_key;
+            $user = $this->findByEmail($result->email);
+            $this->auth_key = $user->auth_key;
+            if($user->device_token != $token_device){
+                $user->device_token = $token_device;
+                $user->save(false);
+            }
             return $this->auth_key;
         }
         $user->username = $result->name;
@@ -193,13 +199,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $this->avatar = $result->picture;
         $user->setPassword($result->id);
         $user->generateAuthKey();
+        $user->token_device = $token_device;
         $user->status = 10;
 
         return $user->save() ? $user : null;
     }
 
     //Facebook SignUp
-    public function fregister($accessToken)
+    public function fregister($accessToken, $token_device)
     {
         $url = 'https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&access_token=' . $accessToken;
 
@@ -216,8 +223,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
         $user = new User();
         if($this->findByEmail($result->email)){
-            $this->auth_key = $this->findByEmail($result->email)->auth_key;
-            return $this->auth_key;
+            $user = $this->findByEmail($result->email);
+            $this->auth_key = $user->auth_key;
+            if($user->device_token != $token_device){
+                $user->device_token = $token_device;
+                $user->save(false);
+            }
         }
         $user->username = $result->name;
         $user->email = $result->email;
@@ -231,13 +242,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         $user->setPassword($result->id);
         $user->generateAuthKey();
+        $user->token_device = $token_device;
         $user->status = 10;
 
         return $user->save() ? $user : null;
     }
 
     //LinkedIn SignUp
-    public function lregister($accessToken)
+    public function lregister($accessToken, $token_device)
     {
         $url = 'https://api.linkedin.com/v1/people/~:(id,email-address,formatted-name,picture-urls::(original))?oauth2_access_token=' . $accessToken . '&format=json';
 
@@ -255,8 +267,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user = new User();
         $user->email = $result->emailAddress;
         if($this->findByEmail($result->emailAddress)){
-            $this->auth_key = $this->findByEmail($result->emailAddress)->auth_key;
-            return $this->auth_key;
+            $user = $this->findByEmail($result->email);
+            $this->auth_key = $user->auth_key;
+            if($user->device_token != $token_device){
+                $user->device_token = $token_device;
+                $user->save(false);
+            }
         }
         $user->username = $result->formattedName;
         $this->username = $result->formattedName;
@@ -269,6 +285,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         $user->setPassword($result->id);
         $user->generateAuthKey();
+        $user->token_device = $token_device;
         $user->status = 10;
 
         return $user->save() ? $user : null;
@@ -278,8 +295,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function login($request)
     {
         $user = $this->findByEmail($request['email']);
+        $token_device = $request['token_device'];
         if($user){
             if(Yii::$app->security->validatePassword($request['password'], $user->password_hash)){
+                if($user->token_device != $request['token_device']){
+                    $user->token_device = $request['token_device'];
+                    $user->save(false);
+                }
                 return true;
             } else {
                 return false;
