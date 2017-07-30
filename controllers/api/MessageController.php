@@ -22,6 +22,7 @@ class MessageController extends ActiveController
             'get-message' => ['POST'],
             'upload-message-photo' => ['POST'],
             'inbox-users' => ['POST'],
+            'outbox-users' => ['POST'],
         ];
     }
 
@@ -134,6 +135,22 @@ class MessageController extends ActiveController
 
         if(Yii::$app->request->post('data') == 'inbox-users'){
             return $model->InboxUsers($user);
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Find all Outbox chat users
+    public function actionOutboxUsers()
+    {
+        $model = new Message();
+        $user = Yii::$app->user->identity;
+
+        if(Yii::$app->request->post('data') == 'outbox-users'){
+            return $model->OutboxUsers($user);
         } else {
             return array(
                 'status' => 400,

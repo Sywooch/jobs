@@ -101,4 +101,20 @@ class Message extends \yii\db\ActiveRecord
         return $dataProvider;
     }
 
+    //Find all Inbox chat users
+    public function OutboxUsers($user)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => static::find()
+                ->select(['id', 'recepient_id', 'message', 'image', 'status', 'date'])
+                ->where(['sender_id' => $user->id])
+                ->groupBy('`recepient_id` DESC'),
+            'pagination' => [
+                'pagesize' => 20
+            ]
+        ]);
+
+        return $dataProvider;
+    }
+
 }

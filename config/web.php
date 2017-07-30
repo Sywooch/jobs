@@ -70,7 +70,8 @@ $config = [
                 'api/send-message' => '/api/message/send-message',
                 'api/get-message' => '/api/message/get-message',
                 'api/upload-message-photo' => '/api/message/upload-message-photo',
-                'api/inbox-users' => '/api/message/inbox-users'
+                'api/inbox-users' => '/api/message/inbox-users',
+                'api/outbox-users' => '/api/message/outbox-users'
             ],
         ],
         'cache' => [
