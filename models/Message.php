@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\data\SqlDataProvider;
 
 class Message extends \yii\db\ActiveRecord
@@ -82,6 +83,22 @@ class Message extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+    //Find all Inbox chat users
+    public function InboxUsers($user)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => static::find()
+                ->select(['id', 'sender_id', 'message', 'image', 'status', 'date'])
+                ->where(['recepient_id' => $user->id])
+                ->groupBy('`sender_id` DESC'),
+            'pagination' => [
+                'pagesize' => 20
+            ]
+        ]);
+
+        return $dataProvider;
     }
 
 }

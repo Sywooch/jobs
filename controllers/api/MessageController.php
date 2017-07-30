@@ -20,7 +20,8 @@ class MessageController extends ActiveController
         return [
             'send-message' => ['POST'],
             'get-message' => ['POST'],
-            'upload-message-photo' => ['POST']
+            'upload-message-photo' => ['POST'],
+            'inbox-users' => ['POST'],
         ];
     }
 
@@ -116,6 +117,23 @@ class MessageController extends ActiveController
 
         if(Yii::$app->request->post('message_id')){
             return $model->FindMessage(Yii::$app->request->post('message_id'));
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+
+    //Find all Inbox chat users
+    public function actionInboxUsers()
+    {
+        $model = new Message();
+        $user = Yii::$app->user->identity;
+
+        if(Yii::$app->request->post('data') == 'inbox-users'){
+            return $model->InboxUsers($user);
         } else {
             return array(
                 'status' => 400,
