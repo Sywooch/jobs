@@ -23,6 +23,7 @@ class MessageController extends ActiveController
             'upload-message-photo' => ['POST'],
             'inbox-users' => ['POST'],
             'outbox-users' => ['POST'],
+            'story' => ['POST']
         ];
     }
 
@@ -151,6 +152,22 @@ class MessageController extends ActiveController
 
         if(Yii::$app->request->post('data') == 'outbox-users'){
             return $model->OutboxUsers($user);
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Get message story by user ID
+    public function actionStory()
+    {
+        $model = new Message();
+        $user = Yii::$app->user->identity;
+
+        if(Yii::$app->request->post('user_id')){
+            return $model->Story(Yii::$app->request->post('user_id'), $user);
         } else {
             return array(
                 'status' => 400,
