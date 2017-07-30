@@ -84,6 +84,12 @@ class MessageController extends ActiveController
             $image = UploadedFile::getInstanceByName("photo");
             if($image){
                 $result = $model->ImageUpload($image, Yii::$app->request->post('recepient_id'), $sender, Yii::$app->request->post('message'));
+                $apns = Yii::$app->apns;
+                $apns->send($model->recepient_token_device, 'Photo',
+                    [
+                        'sound' => 'default',
+                        'badge' => 1
+                    ]);
                 return array(
                     'status' => 200,
                     'message' => 'Photo successfully saved.',

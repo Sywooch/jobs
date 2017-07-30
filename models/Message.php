@@ -62,6 +62,8 @@ class Message extends \yii\db\ActiveRecord
     public function ImageUpload($photo, $recepient_id, $sender, $text)
     {
         if(isset($photo)){
+            $recepient = User::findOne(['id' => $recepient_id]);
+            $this->recepient_token_device = $recepient->token_device;
             $imageName = uniqid();
             $photo->saveAs('message_image/' . $imageName . '.' . $photo->extension);
             $this->image = 'message_image/' . $imageName . '.' . $photo->extension;
