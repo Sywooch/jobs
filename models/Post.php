@@ -36,11 +36,13 @@ class Post extends \yii\db\ActiveRecord
     public function UserPosts($user)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT  post.id, 
-                post.title, post.price, post_image.image
+            'sql' => "SELECT  post.id, post.user_id as creatorID, post.specification,
+                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
                 FROM post   
                 LEFT JOIN post_image 
                 ON post.id = post_image.post_id 
+                RIGHT JOIN category
+                ON post.category_id = category.id
                 WHERE post.user_id = {$user->id}
                 AND post.status = 0
                 GROUP BY post.id DESC",
@@ -53,12 +55,14 @@ class Post extends \yii\db\ActiveRecord
     public function PostsByCategory($category_id)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT  post.id, 
-                post.title, post.price, post_image.image, post.category_id AS categoryID
+            'sql' => "SELECT  post.id, post.user_id as creatorID, post.specification,
+                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
                 FROM post
                 LEFT JOIN post_image 
                 ON post.id = post_image.post_id
                 JOIN category 
+                RIGHT JOIN category
+                ON post.category_id = category.id
                 WHERE post.category_id = {$category_id}
                 AND post.status = 0
                 GROUP BY post.id DESC",
@@ -108,11 +112,13 @@ class Post extends \yii\db\ActiveRecord
     public function PostSearch($title)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT  post.id, 
-                post.title, post.price, post_image.image
+            'sql' => "SELECT  post.id, post.user_id as creatorID, post.specification,
+                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
                 FROM post
                 LEFT JOIN post_image 
                 ON post.id = post_image.post_id 
+                RIGHT JOIN category 
+                ON post.category_id = category.id
                 AND post.status = 0
                 WHERE post.title LIKE '%{$title}%'
                 GROUP BY post.id DESC",

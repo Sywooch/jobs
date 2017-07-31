@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\SqlDataProvider;
+use yii\db\Command;
 
 class Message extends \yii\db\ActiveRecord
 {
@@ -56,7 +57,16 @@ class Message extends \yii\db\ActiveRecord
     //Find Message by ID
     public function FindMessage($message_id)
     {
-        return static::findOne(['id' => $message_id]);
+        $connection = Yii::$app->db;
+        $query = $connection->createCommand(
+            "SELECT message.*, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
+              FROM message
+              INNER JOIN user ON user.id = message.sender_id
+              INNER JOIN user as u ON u.id = message.recepient_id
+              WHERE message.id = {$message_id}"
+        )->queryAll();
+
+        return $query;
     }
 
     //Upload image in chat
@@ -92,16 +102,27 @@ class Message extends \yii\db\ActiveRecord
             'query' => static::find()
                 ->select(['id', 'sender_id', 'message', 'image', 'status', 'date'])
                 ->where(['recepient_id' => $user->id])
-                ->groupBy('`sender_id` DESC'),
+                ->groupBy('`sender_id`'),
             'pagination' => [
                 'pagesize' => 20
             ]
         ]);
+//        $dataProvider = new SqlDataProvider([
+//            'sql' => "SELECT message.id, sender_id, message, image, message.status, date, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
+//              FROM message
+//              JOIN user ON user.id = message.sender_id
+//              JOIN user as u ON u.id = message.recepient_id
+//              WHERE message.recepient_id = {$user->id}
+//              GROUP BY message.sender_id",
+//            'pagination' => [
+//                'pagesize' => 20
+//            ]
+//        ]);
 
         return $dataProvider;
     }
 
-    //Find all Inbox chat users
+    //Find all Outbox chat users
     public function OutboxUsers($user)
     {
         $dataProvider = new ActiveDataProvider([
@@ -120,11 +141,14 @@ class Message extends \yii\db\ActiveRecord
     //Get message story
     public function Story($id, $current_user)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => static::find()
-                ->where(['sender_id' => $id, 'recepient_id' => $current_user])
-                ->orWhere(['sender_id' => $current_user, 'recepient_id' => $id])
-                ->orderBy('date DESC'),
+        $dataProvider = new SqlDataProvider([
+            'sql' => "SELECT message.id, sender_id, message, image, message.status, date, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
+              FROM message
+              JOIN user ON user.id = message.sender_id
+              JOIN user as u ON u.id = message.recepient_id
+              WHERE message.sender_id = {$id} AND message.recepient_id = {$current_user->id}
+              OR message.sender_id = {$current_user->id} AND message.recepient_id = {$id}
+              ORDER BY message.date DESC",
             'pagination' => [
                 'pagesize' => 20
             ]
@@ -136,12 +160,13 @@ class Message extends \yii\db\ActiveRecord
     //Search message by text
     public function MessageSearch($request, $user)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Message::find()
-                ->where(['sender_id' => $user->id])
-                ->orWhere(['recepient_id' => $user->id])
-                ->andFilterWhere(['like', 'message', $request])
-                ->orderBy(['date' => SORT_DESC]),
+        $dataProvider = new SqlDataProvider([
+            'sql' => "SELECT message.id, sender_id, message, image, message.status, date, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
+              FROM message
+              JOIN user ON user.id = message.sender_id
+              JOIN user as u ON u.id = message.recepient_id
+              WHERE ((message.sender_id = {$user->id}) OR (message.recepient_id = {$user->id})) AND (message.message LIKE '%{$request}%')
+              ORDER BY message.date DESC",
             'pagination' => [
                 'pagesize' => 20
             ]
