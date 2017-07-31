@@ -72,7 +72,8 @@ $config = [
                 'api/upload-message-photo' => '/api/message/upload-message-photo',
                 'api/inbox-users' => '/api/message/inbox-users',
                 'api/outbox-users' => '/api/message/outbox-users',
-                'api/story' => '/api/message/story'
+                'api/story' => '/api/message/story',
+                'api/search-message' => '/api/message/search-message'
             ],
         ],
         'cache' => [

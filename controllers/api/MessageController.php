@@ -176,4 +176,20 @@ class MessageController extends ActiveController
         }
     }
 
+    //Find message by text
+    public function actionSearchMessage()
+    {
+        $model = new Message();
+        $user = Yii::$app->user->identity;
+        
+        if(Yii::$app->request->post('search_text')){
+            return $model->MessageSearch(Yii::$app->request->post('search_text'), $user);
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
 }

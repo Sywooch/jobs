@@ -273,7 +273,7 @@ class PostController extends ActiveController
     public function actionPostSearch()
     {
         $model = new Post();
-        if(Yii::$app->request->post()){
+        if(Yii::$app->request->post('search_title')){
             return $model->PostSearch(Yii::$app->request->post('search_title'));
         } else {
             return array(

@@ -117,6 +117,7 @@ class Message extends \yii\db\ActiveRecord
         return $dataProvider;
     }
 
+    //Get message story
     public function Story($id, $current_user)
     {
         $dataProvider = new ActiveDataProvider([
@@ -124,6 +125,23 @@ class Message extends \yii\db\ActiveRecord
                 ->where(['sender_id' => $id, 'recepient_id' => $current_user])
                 ->orWhere(['sender_id' => $current_user, 'recepient_id' => $id])
                 ->orderBy('date DESC'),
+            'pagination' => [
+                'pagesize' => 20
+            ]
+        ]);
+
+        return $dataProvider;
+    }
+
+    //Search message by text
+    public function MessageSearch($request, $user)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Message::find()
+                ->where(['sender_id' => $user->id])
+                ->orWhere(['recepient_id' => $user->id])
+                ->andFilterWhere(['like', 'message', $request])
+                ->orderBy(['date' => SORT_DESC]),
             'pagination' => [
                 'pagesize' => 20
             ]
