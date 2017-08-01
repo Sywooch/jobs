@@ -60,7 +60,6 @@ class Post extends \yii\db\ActiveRecord
                 FROM post
                 LEFT JOIN post_image 
                 ON post.id = post_image.post_id
-                JOIN category 
                 RIGHT JOIN category
                 ON post.category_id = category.id
                 WHERE post.category_id = {$category_id}

@@ -108,11 +108,12 @@ class Message extends \yii\db\ActiveRecord
 //            ]
 //        ]);
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, sender_id, message, image, message.status, date, user.avatar AS sender_avatar
-              FROM message
+            'sql' => "SELECT message.id, sender_id AS recepient_sender_id, user.username AS sender_username, message, image, message.status, date, user.avatar AS sender_avatar
+              FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
               JOIN user ON user.id = message.sender_id
               WHERE message.recepient_id = {$user->id}
-              GROUP BY message.sender_id",
+              GROUP BY sender_id
+              ORDER BY message.id DESC",
             'pagination' => [
                 'pagesize' => 20
             ]
@@ -135,11 +136,12 @@ class Message extends \yii\db\ActiveRecord
 //        ]);
 
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, recepient_id, message, image, message.status, date, u.avatar AS recepient_avatar
-              FROM message
+            'sql' => "SELECT message.id, recepient_id AS recepient_sender_id, u.username AS recepient_username, message, image, message.status, date, u.avatar AS recepient_avatar
+              FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
               JOIN user as u ON u.id = message.recepient_id
-              WHERE message.recepient_id = {$user->id}
-              GROUP BY message.sender_id",
+              WHERE message.sender_id = {$user->id}
+              GROUP BY recepient_id
+              ORDER BY message.id DESC",
             'pagination' => [
                 'pagesize' => 20
             ]
@@ -158,7 +160,7 @@ class Message extends \yii\db\ActiveRecord
               JOIN user as u ON u.id = message.recepient_id
               WHERE message.sender_id = {$id} AND message.recepient_id = {$current_user->id}
               OR message.sender_id = {$current_user->id} AND message.recepient_id = {$id}
-              ORDER BY message.date DESC",
+              ORDER BY message.date",
             'pagination' => [
                 'pagesize' => 20
             ]
