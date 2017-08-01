@@ -98,26 +98,25 @@ class Message extends \yii\db\ActiveRecord
     //Find all Inbox chat users
     public function InboxUsers($user)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => static::find()
-                ->select(['id', 'sender_id', 'message', 'image', 'status', 'date'])
-                ->where(['recepient_id' => $user->id])
-                ->groupBy('`sender_id`'),
-            'pagination' => [
-                'pagesize' => 20
-            ]
-        ]);
-//        $dataProvider = new SqlDataProvider([
-//            'sql' => "SELECT message.id, sender_id, message, image, message.status, date, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
-//              FROM message
-//              JOIN user ON user.id = message.sender_id
-//              JOIN user as u ON u.id = message.recepient_id
-//              WHERE message.recepient_id = {$user->id}
-//              GROUP BY message.sender_id",
+//        $dataProvider = new ActiveDataProvider([
+//            'query' => static::find()
+//                ->select(['id', 'sender_id', 'message', 'image', 'status', 'date'])
+//                ->where(['recepient_id' => $user->id])
+//                ->groupBy('`sender_id`'),
 //            'pagination' => [
 //                'pagesize' => 20
 //            ]
 //        ]);
+        $dataProvider = new SqlDataProvider([
+            'sql' => "SELECT message.id, sender_id, message, image, message.status, date, user.avatar AS sender_avatar
+              FROM message
+              JOIN user ON user.id = message.sender_id
+              WHERE message.recepient_id = {$user->id}
+              GROUP BY message.sender_id",
+            'pagination' => [
+                'pagesize' => 20
+            ]
+        ]);
 
         return $dataProvider;
     }
@@ -125,11 +124,22 @@ class Message extends \yii\db\ActiveRecord
     //Find all Outbox chat users
     public function OutboxUsers($user)
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => static::find()
-                ->select(['id', 'recepient_id', 'message', 'image', 'status', 'date'])
-                ->where(['sender_id' => $user->id])
-                ->groupBy('`recepient_id` DESC'),
+//        $dataProvider = new ActiveDataProvider([
+//            'query' => static::find()
+//                ->select(['id', 'recepient_id', 'message', 'image', 'status', 'date'])
+//                ->where(['sender_id' => $user->id])
+//                ->groupBy('`recepient_id` DESC'),
+//            'pagination' => [
+//                'pagesize' => 20
+//            ]
+//        ]);
+
+        $dataProvider = new SqlDataProvider([
+            'sql' => "SELECT message.id, recepient_id, message, image, message.status, date, u.avatar AS recepient_avatar
+              FROM message
+              JOIN user as u ON u.id = message.recepient_id
+              WHERE message.recepient_id = {$user->id}
+              GROUP BY message.sender_id",
             'pagination' => [
                 'pagesize' => 20
             ]
