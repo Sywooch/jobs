@@ -167,6 +167,17 @@ class MessageController extends ActiveController
         $user = Yii::$app->user->identity;
 
         if(Yii::$app->request->post('user_id')){
+            $messages = Message::find()
+                ->where(['sender_id' => Yii::$app->request->post('user_id'), 'recepient_id' => $user->id])
+                ->orWhere(['sender_id' => $user->id, 'recepient_id' => Yii::$app->request->post('user_id')])
+                ->andWhere(['status' => 0])
+                ->all();
+            if(isset($messages)){
+                foreach ($messages as $message){
+                    $message->status = 1;
+                    $message->save(false);
+                }
+            }
             return $model->Story(Yii::$app->request->post('user_id'), $user);
         } else {
             return array(

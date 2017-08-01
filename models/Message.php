@@ -98,17 +98,8 @@ class Message extends \yii\db\ActiveRecord
     //Find all Inbox chat users
     public function InboxUsers($user)
     {
-//        $dataProvider = new ActiveDataProvider([
-//            'query' => static::find()
-//                ->select(['id', 'sender_id', 'message', 'image', 'status', 'date'])
-//                ->where(['recepient_id' => $user->id])
-//                ->groupBy('`sender_id`'),
-//            'pagination' => [
-//                'pagesize' => 20
-//            ]
-//        ]);
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, sender_id AS recepient_sender_id, user.username AS sender_username, message, image, message.status, date, user.avatar AS sender_avatar
+            'sql' => "SELECT message.id, sender_id AS recepient_sender_id, user.username AS sender_username, message, image, date, user.avatar AS sender_avatar
               FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
               JOIN user ON user.id = message.sender_id
               WHERE message.recepient_id = {$user->id}
@@ -125,18 +116,8 @@ class Message extends \yii\db\ActiveRecord
     //Find all Outbox chat users
     public function OutboxUsers($user)
     {
-//        $dataProvider = new ActiveDataProvider([
-//            'query' => static::find()
-//                ->select(['id', 'recepient_id', 'message', 'image', 'status', 'date'])
-//                ->where(['sender_id' => $user->id])
-//                ->groupBy('`recepient_id` DESC'),
-//            'pagination' => [
-//                'pagesize' => 20
-//            ]
-//        ]);
-
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, recepient_id AS recepient_sender_id, u.username AS recepient_username, message, image, message.status, date, u.avatar AS recepient_avatar
+            'sql' => "SELECT message.id, recepient_id AS recepient_sender_id, u.username AS recepient_username, message, image, date, u.avatar AS recepient_avatar
               FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
               JOIN user as u ON u.id = message.recepient_id
               WHERE message.sender_id = {$user->id}
@@ -173,7 +154,7 @@ class Message extends \yii\db\ActiveRecord
     public function MessageSearch($request, $user)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, sender_id, message, image, message.status, date, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
+            'sql' => "SELECT message.id, sender_id, message, image, date, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
               FROM message
               JOIN user ON user.id = message.sender_id
               JOIN user as u ON u.id = message.recepient_id
