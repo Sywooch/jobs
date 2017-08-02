@@ -48,7 +48,12 @@ class MessageController extends ActiveController
         if(Yii::$app->request->post('Message')){
             if($model->SendMessage($sender, Yii::$app->request->post('Message'))){
                 $apns = Yii::$app->apns;
-                $apns->send($model->recepient_token_device, $model->message,
+                $push_text = $sender->username.' sent you '.$model->message;
+                $apns->send($model->recepient_token_device, $push_text,
+                    [
+                        'message_id' => $model->id,
+                        'sender_id' => $sender->id
+                    ],
                     [
                         'sound' => 'default',
                         'badge' => 1
@@ -88,7 +93,12 @@ class MessageController extends ActiveController
             if($image){
                 $result = $model->ImageUpload($image, Yii::$app->request->post('recepient_id'), $sender, Yii::$app->request->post('message'));
                 $apns = Yii::$app->apns;
-                $apns->send($model->recepient_token_device, 'Photo',
+                $push_text = $sender->username.' sent you photo';
+                $apns->send($model->recepient_token_device, $push_text,
+                    [
+                        'message_id' => $model->id,
+                        'sender_id' => $sender->id
+                    ],
                     [
                         'sound' => 'default',
                         'badge' => 1
