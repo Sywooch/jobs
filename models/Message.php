@@ -99,7 +99,7 @@ class Message extends \yii\db\ActiveRecord
     public function InboxUsers($user)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, sender_id AS recepient_sender_id, user.username AS sender_username, message, image, date, user.avatar AS sender_avatar
+            'sql' => "SELECT message.id, message.status, sender_id AS recepient_sender_id, user.username AS sender_username, message, image, date, user.avatar AS sender_avatar
               FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
               JOIN user ON user.id = message.sender_id
               WHERE message.recepient_id = {$user->id}
