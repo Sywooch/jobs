@@ -141,7 +141,7 @@ class Message extends \yii\db\ActiveRecord
               JOIN user as u ON u.id = message.recepient_id
               WHERE message.sender_id = {$id} AND message.recepient_id = {$current_user->id}
               OR message.sender_id = {$current_user->id} AND message.recepient_id = {$id}
-              ORDER BY message.date",
+              ORDER BY message.date DESC",
             'pagination' => [
                 'pagesize' => 20
             ]
