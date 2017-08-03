@@ -63,7 +63,7 @@ class Message extends \yii\db\ActiveRecord
               FROM message
               INNER JOIN user ON user.id = message.sender_id
               INNER JOIN user as u ON u.id = message.recepient_id
-              WHERE message.id = {$message_id}"
+              WHERE message.id = {$message_id} AND message.status <> 10"
         )->queryAll();
 
         return $query;
@@ -102,7 +102,7 @@ class Message extends \yii\db\ActiveRecord
             'sql' => "SELECT message.id, message.status, sender_id AS recepient_sender_id, user.username AS sender_username, message, image, date, user.avatar AS sender_avatar
               FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
               JOIN user ON user.id = message.sender_id
-              WHERE message.recepient_id = {$user->id}
+              WHERE message.recepient_id = {$user->id} AND message.status <> 10
               GROUP BY sender_id
               ORDER BY message.id DESC",
             'pagination' => [
@@ -141,6 +141,7 @@ class Message extends \yii\db\ActiveRecord
               JOIN user as u ON u.id = message.recepient_id
               WHERE message.sender_id = {$id} AND message.recepient_id = {$current_user->id}
               OR message.sender_id = {$current_user->id} AND message.recepient_id = {$id}
+              AND message.status <> 10
               ORDER BY message.date DESC",
             'pagination' => [
                 'pagesize' => 20
@@ -159,6 +160,7 @@ class Message extends \yii\db\ActiveRecord
               JOIN user ON user.id = message.sender_id
               JOIN user as u ON u.id = message.recepient_id
               WHERE ((message.sender_id = {$user->id}) OR (message.recepient_id = {$user->id})) AND (message.message LIKE '%{$request}%')
+              AND message.status <> 10
               ORDER BY message.date DESC",
             'pagination' => [
                 'pagesize' => 20
@@ -166,6 +168,33 @@ class Message extends \yii\db\ActiveRecord
         ]);
 
         return $dataProvider;
+    }
+
+    public function DeleteInboxMessage($request, $user)
+    {
+        if(isset($request)){
+            foreach ($request as $item){
+                $messages = static::find()
+                    ->where(['recepient_id' => $user->id, 'sender_id' => $item])
+                    ->andWhere(['<>', 'status', 10])
+                    ->all();
+                if(isset($messages)){
+                    foreach ($messages as $message){
+                        $message->status = 10;
+                        $message->save(false);
+                    }
+                }
+            }
+            return array(
+                'status' => 200,
+                'message' => 'Successfully deleted.'
+            );
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Invalid request.'
+            );
+        }
     }
 
 }

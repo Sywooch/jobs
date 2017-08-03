@@ -73,7 +73,8 @@ $config = [
                 'api/inbox-users' => '/api/message/inbox-users',
                 'api/outbox-users' => '/api/message/outbox-users',
                 'api/story' => '/api/message/story',
-                'api/search-message' => '/api/message/search-message'
+                'api/search-message' => '/api/message/search-message',
+                'api/delete-inbox-message' => '/api/message/delete-message-by-sender-id'
             ],
         ],
         'cache' => [

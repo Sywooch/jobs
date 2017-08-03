@@ -23,7 +23,8 @@ class MessageController extends ActiveController
             'upload-message-photo' => ['POST'],
             'inbox-users' => ['POST'],
             'outbox-users' => ['POST'],
-            'story' => ['POST']
+            'story' => ['POST'],
+            'delete-message-by-sender-id' => ['POST']
         ];
     }
 
@@ -205,6 +206,22 @@ class MessageController extends ActiveController
         
         if(Yii::$app->request->post('search_text')){
             return $model->MessageSearch(Yii::$app->request->post('search_text'), $user);
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Delete (change status) message story
+    public function actionDeleteMessageBySenderId()
+    {
+        $model = new Message();
+        $user = Yii::$app->user->identity;
+
+        if(Yii::$app->request->post('sender_ids')){
+            return $model->DeleteInboxMessage(Yii::$app->request->post('sender_ids'), $user);
         } else {
             return array(
                 'status' => 400,
