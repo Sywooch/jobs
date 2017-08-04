@@ -2,6 +2,7 @@
 
 namespace app\controllers\api;
 
+use app\models\PushNotifications;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\web\Response;
@@ -325,6 +326,22 @@ class UserController extends ActiveController
             );
         }
         return $response;
+    }
+    
+    //Change push notifications for user
+    public function actionPushNotification()
+    {
+        $model = new PushNotifications();
+        $user = Yii::$app->user->identity;
+        
+        if(Yii::$app->request->post('push')){
+            return $model->ChangePush(Yii::$app->request->post('push'), $user);
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
     }
 
     //Authorization test

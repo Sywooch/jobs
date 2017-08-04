@@ -3,6 +3,7 @@
 namespace app\controllers\api;
 
 use app\models\Message;
+use app\models\PushNotifications;
 use Yii;
 use yii\web\Response;
 use yii\rest\ActiveController;
@@ -48,17 +49,22 @@ class MessageController extends ActiveController
 
         if(Yii::$app->request->post('Message')){
             if($model->SendMessage($sender, Yii::$app->request->post('Message'))){
-                $apns = Yii::$app->apns;
-                $push_text = $sender->username.' sent you '.$model->message;
-                $apns->send($model->recepient_token_device, $push_text,
-                    [
-                        'message_id' => $model->id,
-                        'sender_id' => $sender->id
-                    ],
-                    [
-                        'sound' => 'default',
-                        'badge' => 1
-                    ]);
+                $push_flags = PushNotifications::findOne(['user_id' => $sender->recepient_id]);
+                if(isset($push_flags)){
+                    if($push_flags->message == 1){
+                        $apns = Yii::$app->apns;
+                        $push_text = $sender->username.' sent you '.$model->message;
+                        $apns->send($model->recepient_token_device, $push_text,
+                            [
+                                'message_id' => $model->id,
+                                'sender_id' => $sender->id
+                            ],
+                            [
+                                'sound' => 'default',
+                                'badge' => 1
+                            ]);
+                    }
+                }
                 return array(
                     'status' => 200,
                     'message' => 'Successfully send message.',
@@ -93,17 +99,22 @@ class MessageController extends ActiveController
             $image = UploadedFile::getInstanceByName("photo");
             if($image){
                 $result = $model->ImageUpload($image, Yii::$app->request->post('recepient_id'), $sender, Yii::$app->request->post('message'));
-                $apns = Yii::$app->apns;
-                $push_text = $sender->username.' sent you photo';
-                $apns->send($model->recepient_token_device, $push_text,
-                    [
-                        'message_id' => $model->id,
-                        'sender_id' => $sender->id
-                    ],
-                    [
-                        'sound' => 'default',
-                        'badge' => 1
-                    ]);
+                $push_flags = PushNotifications::findOne(['user_id' => $sender->recepient_id]);
+                if(isset($push_flags)){
+                    if($push_flags->message == 1){
+                        $apns = Yii::$app->apns;
+                        $push_text = $sender->username.' sent you photo';
+                        $apns->send($model->recepient_token_device, $push_text,
+                            [
+                                'message_id' => $model->id,
+                                'sender_id' => $sender->id
+                            ],
+                            [
+                                'sound' => 'default',
+                                'badge' => 1
+                            ]);
+                    }
+                }
                 return array(
                     'status' => 200,
                     'message' => 'Photo successfully saved.',

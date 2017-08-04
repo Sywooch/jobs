@@ -2,9 +2,9 @@
 -- version 4.4.15.7
 -- http://www.phpmyadmin.net
 --
--- Хост: 127.0.0.1:3307
--- Время создания: Июл 30 2017 г., 08:50
--- Версия сервера: 5.5.50
+-- Хост: 127.0.0.1:3306
+-- Время создания: Авг 04 2017 г., 11:59
+-- Версия сервера: 5.6.31
 -- Версия PHP: 5.6.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -73,7 +73,19 @@ CREATE TABLE IF NOT EXISTS `message` (
   `image` varchar(255) DEFAULT NULL,
   `status` int(11) DEFAULT '0',
   `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `message`
+--
+
+INSERT INTO `message` (`id`, `sender_id`, `recepient_id`, `message`, `image`, `status`, `date`) VALUES
+(6, 49, 25, 'I can fix this!', NULL, 1, '2017-07-31 06:10:53'),
+(7, 49, 25, 'I can!', NULL, 1, '2017-07-31 06:11:50'),
+(8, 25, 49, 'What do you mean?', NULL, 1, '2017-07-31 06:11:55'),
+(9, 48, 49, 'It`s easy =)', NULL, 1, '2017-07-31 06:11:55'),
+(10, 25, 33, 'Hi, bro!', NULL, 0, '2017-07-31 06:37:07'),
+(11, 48, 49, 'lol', NULL, 1, '2017-08-01 05:52:57');
 
 -- --------------------------------------------------------
 
@@ -125,6 +137,25 @@ INSERT INTO `post_image` (`id`, `post_id`, `image`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `push_notifications`
+--
+
+CREATE TABLE IF NOT EXISTS `push_notifications` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` int(11) DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `push_notifications`
+--
+
+INSERT INTO `push_notifications` (`id`, `user_id`, `message`) VALUES
+(2, 65, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `user`
 --
 
@@ -143,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `status` smallint(6) NOT NULL DEFAULT '10',
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `user`
@@ -157,7 +188,8 @@ INSERT INTO `user` (`id`, `avatar`, `username`, `phone`, `country`, `city`, `aut
 (33, '123', 'Test22', '+380965709361', 'Ukraine', 'Dnepr', 'rfgwEHhhL26as-NSs-Du6C-zoljPdtWZ', 'q4fqx', '$2y$13$lUL9.MXlRlL3m72kSLJUhOzX6v3kwzUuM9B0nU5en4SQHNpEl6oNO', NULL, 'test13@gmail.com', 10, 1499069761, 1499163936),
 (39, 'avatars/595cc61359cdb.png', 'hhhh', '+380665709361', 'Ukraine', 'Dnepr', 'DItENCEhn1PbgZOugFgSRQCPAdxvMraF', 'q4fq4xf4qfs', '$2y$13$yk6IC1ZIM0kAi8BCKdJMPuPFbvVDMr2ZZI0P2at9o62Y/wBvS011C', NULL, 'alalal@gmail.com', 10, 1499170554, 1499252243),
 (48, 'No image', 'Vas1ya', '+380965509361', 'Ukraine', 'Dnepr', 'xt1ZdqnHIi2eCQpvcy91e2HgC34sxe1Z', 'afsew4f4qwf4', '$2y$13$I5zo.7rM.bSB.f2/IRWptepfF5ND/T/HzHerth0Nx7gl.Blo4IjXW', NULL, 't@gmail.com', 10, 1499259965, 1499259965),
-(49, 'https://media.licdn.com/mpr/mprx/0_0gzKp967bYU6a6tbJudBsFUEkaVw2Q-kp0d12eV79lVmgExkmNdnfhQdNaVI2o1FeuHBIYFdbIRIxBtas9k0IDbfrIRwxBmFe9ktY9U75AECxh0metNPNdvxUm', 'Влад Прибылов', NULL, NULL, NULL, 'RTPqDS1ROSl4mEL-Rdn1AMHv-wwck8SO', 'fdgsdtg45egw5', '$2y$13$ffIT4ujZrFBfjO.WGKSowue6d8.EVcaAh28SqGKTvC6Ir4uguOHXq', NULL, 'prybylov.v2@gmail.com', 10, 1499667691, 1499667691);
+(49, 'https://media.licdn.com/mpr/mprx/0_0gzKp967bYU6a6tbJudBsFUEkaVw2Q-kp0d12eV79lVmgExkmNdnfhQdNaVI2o1FeuHBIYFdbIRIxBtas9k0IDbfrIRwxBmFe9ktY9U75AECxh0metNPNdvxUm', 'Влад Прибылов', NULL, NULL, NULL, 'RTPqDS1ROSl4mEL-Rdn1AMHv-wwck8SO', 'fdgsdtg45egw5', '$2y$13$ffIT4ujZrFBfjO.WGKSowue6d8.EVcaAh28SqGKTvC6Ir4uguOHXq', NULL, 'prybylov.v2@gmail.com', 10, 1499667691, 1499667691),
+(65, 'No image', 'Vasya', '+380365789361', 'Ukraine', 'Dnepr', 'SmVemdUJ16CUGMxof2bMt2amjDC_Rbbt', '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad147', '$2y$13$Jtknp92IxHk4pwzitSTW8eXZCJ8cQybWDT6C1zaTsVpOgopK.dQxC', NULL, 'test123@gmail.com', 10, 1501834382, 1501834382);
 
 --
 -- Индексы сохранённых таблиц
@@ -201,6 +233,13 @@ ALTER TABLE `post_image`
   ADD KEY `post_image_ibfk_1` (`post_id`);
 
 --
+-- Индексы таблицы `push_notifications`
+--
+ALTER TABLE `push_notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `push_notifications_ibfk_1` (`user_id`);
+
+--
 -- Индексы таблицы `user`
 --
 ALTER TABLE `user`
@@ -226,7 +265,7 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT для таблицы `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT для таблицы `post`
 --
@@ -238,10 +277,15 @@ ALTER TABLE `post`
 ALTER TABLE `post_image`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
+-- AUTO_INCREMENT для таблицы `push_notifications`
+--
+ALTER TABLE `push_notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=66;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
@@ -272,6 +316,12 @@ ALTER TABLE `post`
 --
 ALTER TABLE `post_image`
   ADD CONSTRAINT `post_image_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`) ON DELETE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `push_notifications`
+--
+ALTER TABLE `push_notifications`
+  ADD CONSTRAINT `push_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

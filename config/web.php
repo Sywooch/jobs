@@ -48,6 +48,7 @@ $config = [
                 'api/glogin' => '/api/user/glogin',
                 'api/flogin' => '/api/user/flogin',
                 'api/llogin' => '/api/user/llogin',
+                'api/push-notification' => '/api/user/push-notification',
                 'api/profile' => '/api/profile/profile',
                 'api/change-profile' => '/api/profile/change-profile',
                 'api/change-password' => '/api/profile/change-password',

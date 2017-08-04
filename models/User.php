@@ -162,7 +162,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user->generateAuthKey();
         $user->status = 10;
 
-        return $user->save() ? $user : null;
+        if($user->save()){
+            $model = new PushNotifications();
+            $model->user_id = $user->getPrimaryKey();
+            $model->save(false);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //Google SignUp
@@ -202,7 +209,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user->token_device = $token_device;
         $user->status = 10;
 
-        return $user->save() ? $user : null;
+        if($user->save()){
+            $model = new PushNotifications();
+            $model->user_id = $user->getPrimaryKey();
+            $model->save(false);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //Facebook SignUp
@@ -245,7 +259,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user->token_device = $token_device;
         $user->status = 10;
 
-        return $user->save() ? $user : null;
+        if($user->save()){
+            $model = new PushNotifications();
+            $model->user_id = $user->getPrimaryKey();
+            $model->save(false);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //LinkedIn SignUp
@@ -288,7 +309,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user->token_device = $token_device;
         $user->status = 10;
 
-        return $user->save() ? $user : null;
+        if($user->save()){
+            $model = new PushNotifications();
+            $model->user_id = $user->getPrimaryKey();
+            $model->save(false);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //Basic login
