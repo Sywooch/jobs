@@ -49,7 +49,7 @@ class MessageController extends ActiveController
 
         if(Yii::$app->request->post('Message')){
             if($model->SendMessage($sender, Yii::$app->request->post('Message'))){
-                $push_flags = PushNotifications::findOne(['user_id' => $sender->recepient_id]);
+                $push_flags = PushNotifications::findOne(['user_id' => $model->recepient_id]);
                 if(isset($push_flags)){
                     if($push_flags->message == 1){
                         $apns = Yii::$app->apns;
@@ -99,7 +99,7 @@ class MessageController extends ActiveController
             $image = UploadedFile::getInstanceByName("photo");
             if($image){
                 $result = $model->ImageUpload($image, Yii::$app->request->post('recepient_id'), $sender, Yii::$app->request->post('message'));
-                $push_flags = PushNotifications::findOne(['user_id' => $sender->recepient_id]);
+                $push_flags = PushNotifications::findOne(['user_id' => $model->recepient_id]);
                 if(isset($push_flags)){
                     if($push_flags->message == 1){
                         $apns = Yii::$app->apns;
