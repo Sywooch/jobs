@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 04 2017 г., 11:59
+-- Время создания: Авг 05 2017 г., 08:46
 -- Версия сервера: 5.6.31
 -- Версия PHP: 5.6.23
 
@@ -143,7 +143,7 @@ INSERT INTO `post_image` (`id`, `post_id`, `image`) VALUES
 CREATE TABLE IF NOT EXISTS `push_notifications` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `message` int(11) DEFAULT '0'
+  `message` int(11) DEFAULT '1'
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
