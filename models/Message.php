@@ -209,6 +209,7 @@ class Message extends \yii\db\ActiveRecord
                 FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
                 JOIN user ON user.id = message.sender_id
                 WHERE message.recepient_id = {$user->id}
+                AND message.status <> 10
                 AND user.username LIKE '%{$request}%'
                 GROUP BY sender_id
                 ORDER BY message.id DESC
