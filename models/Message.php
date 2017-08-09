@@ -197,4 +197,28 @@ class Message extends \yii\db\ActiveRecord
         }
     }
 
+    //Search InBox Users
+    public function UserSearch($request)
+    {
+        $user = Yii::$app->user->identity;
+
+        $dataProvider = new SqlDataProvider([
+            'sql' => "
+                SELECT user.username as sender_username, message.id, message.image, message.message,
+                  message.sender_id AS recepient_sender_id, user.avatar AS sender_avatar, message.date, message.status
+                FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
+                JOIN user ON user.id = message.sender_id
+                WHERE message.recepient_id = {$user->id}
+                AND user.username LIKE '%{$request}%'
+                GROUP BY sender_id
+                ORDER BY message.id DESC
+            ",
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
+
+        return $dataProvider;
+    }
+
 }

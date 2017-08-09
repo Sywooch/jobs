@@ -25,6 +25,7 @@ class MessageController extends ActiveController
             'inbox-users' => ['POST'],
             'outbox-users' => ['POST'],
             'story' => ['POST'],
+            'user-search' => ['POST'],
             'delete-message-by-sender-id' => ['POST']
         ];
     }
@@ -217,6 +218,21 @@ class MessageController extends ActiveController
         
         if(Yii::$app->request->post('search_text')){
             return $model->MessageSearch(Yii::$app->request->post('search_text'), $user);
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Inbox user search
+    public function actionUserSearch()
+    {
+        $model = new Message();
+
+        if(Yii::$app->request->post('search_user')){
+            return $model->UserSearch(Yii::$app->request->post('search_user'));
         } else {
             return array(
                 'status' => 400,

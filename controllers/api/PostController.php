@@ -269,7 +269,7 @@ class PostController extends ActiveController
         }
     }
 
-    //Post Serach by title
+    //Post Search by title
     public function actionPostSearch()
     {
         $model = new Post();
