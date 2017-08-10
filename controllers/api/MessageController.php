@@ -259,4 +259,19 @@ class MessageController extends ActiveController
         }
     }
 
+    public function actionTestGeo()
+    {
+        if(Yii::$app->request->post('coordinates')){
+            return array(
+                'status' => 200,
+                'data' => Yii::$app->request->post('coordinates')
+            );
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
 }

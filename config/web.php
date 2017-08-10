@@ -77,6 +77,7 @@ $config = [
                 'api/search-message' => '/api/message/search-message',
                 'api/search-user' => '/api/message/user-search',
                 'api/delete-inbox-message' => '/api/message/delete-message-by-sender-id',
+                'api/test-geo' => '/api/message/test-geo'
             ],
         ],
         'cache' => [
