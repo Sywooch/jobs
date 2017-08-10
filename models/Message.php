@@ -121,6 +121,7 @@ class Message extends \yii\db\ActiveRecord
               FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
               JOIN user as u ON u.id = message.recepient_id
               WHERE message.sender_id = {$user->id}
+              AND message.status <> 10
               GROUP BY recepient_id
               ORDER BY message.id DESC",
             'pagination' => [
@@ -229,7 +230,7 @@ class Message extends \yii\db\ActiveRecord
 
         $dataProvider = new SqlDataProvider([
             'sql' => "
-                SELECT user.username as sender_username, message.id, message.image, message.message,
+                SELECT user.username as recepient_username, message.id, message.image, message.message,
                   message.recepient_id AS recepient_sender_id, user.avatar AS sender_avatar, message.date, message.status
                 FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
                 JOIN user ON user.id = message.recepient_id
