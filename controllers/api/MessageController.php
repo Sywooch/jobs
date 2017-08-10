@@ -231,9 +231,11 @@ class MessageController extends ActiveController
     {
         $model = new Message();
 
-        if(Yii::$app->request->post('search_user')){
+        if(Yii::$app->request->post('type') == 'inbox' && Yii::$app->request->post('search_user')){
             return $model->UserSearch(Yii::$app->request->post('search_user'));
-        } else {
+        } elseif(Yii::$app->request->post('type') == 'outbox' && Yii::$app->request->post('search_user')) {
+            return $model->OutboxUserSearch(Yii::$app->request->post('search_user'));
+        }else{
             return array(
                 'status' => 400,
                 'message' => 'Bad parameters.'

@@ -222,4 +222,29 @@ class Message extends \yii\db\ActiveRecord
         return $dataProvider;
     }
 
+    //Search OutBox Users
+    public function OutboxUserSearch($request)
+    {
+        $user = Yii::$app->user->identity;
+
+        $dataProvider = new SqlDataProvider([
+            'sql' => "
+                SELECT user.username as sender_username, message.id, message.image, message.message,
+                  message.recepient_id AS recepient_sender_id, user.avatar AS sender_avatar, message.date, message.status
+                FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
+                JOIN user ON user.id = message.recepient_id
+                WHERE message.sender_id = {$user->id}
+                AND message.status <> 10
+                AND user.username LIKE '%{$request}%'
+                GROUP BY recepient_id
+                ORDER BY message.id DESC
+            ",
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
+
+        return $dataProvider;
+    }
+
 }
