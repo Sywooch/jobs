@@ -43,7 +43,7 @@ class Post extends \yii\db\ActiveRecord
                 ON post.id = post_image.post_id 
                 RIGHT JOIN category
                 ON post.category_id = category.id
-                WHERE post.user_id = {$user->id}
+                WHERE post.user_id = {$user}
                 AND post.status = 0
                 GROUP BY post.id DESC",
             'pagination' => false,

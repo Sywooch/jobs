@@ -337,6 +337,34 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         } return false;
     }
 
+    //Get user Data by ID
+    public function UserData($user_id)
+    {
+        $user = static::find()
+            ->where(['id' => $user_id])
+            ->one();
+
+        if(isset($user)){
+            return array(
+                'status' => 200,
+                'data' => [
+                    'id' => $user->id,
+                    'photo' => $user->avatar,
+                    'name' => $user->username,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'country' => $user->country,
+                    'city' => $user->city
+                ]
+            );
+        } else {
+            return array(
+                'status' => 404,
+                'message' => 'User not found.'
+            );
+        }
+    }
+
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {

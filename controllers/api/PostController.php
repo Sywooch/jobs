@@ -210,9 +210,9 @@ class PostController extends ActiveController
     public function actionUserPosts()
     {
         $model = new Post();
-        $user = Yii::$app->user->identity;
-        if(Yii::$app->request->post() && $user){
-            return $model->UserPosts($user);
+
+        if(Yii::$app->request->post('userID')){
+            return $model->UserPosts(Yii::$app->request->post('userID'));
         } else {
             return array(
                 'status' => 400,

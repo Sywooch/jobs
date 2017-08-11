@@ -344,6 +344,21 @@ class UserController extends ActiveController
         }
     }
 
+    //get User info by ID
+    public function actionGetUserData()
+    {
+        $model = new User();
+        
+        if(Yii::$app->request->post('user_id')){
+            return $model->UserData(Yii::$app->request->post('user_id'));
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
     //Authorization test
     public function actionTest()
     {
