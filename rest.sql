@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 05 2017 г., 08:46
+-- Время создания: Авг 14 2017 г., 16:44
 -- Версия сервера: 5.6.31
 -- Версия PHP: 5.6.23
 
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `image` varchar(255) DEFAULT NULL,
   `status` int(11) DEFAULT '0',
   `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `message`
@@ -85,7 +85,9 @@ INSERT INTO `message` (`id`, `sender_id`, `recepient_id`, `message`, `image`, `s
 (8, 25, 49, 'What do you mean?', NULL, 1, '2017-07-31 06:11:55'),
 (9, 48, 49, 'It`s easy =)', NULL, 1, '2017-07-31 06:11:55'),
 (10, 25, 33, 'Hi, bro!', NULL, 0, '2017-07-31 06:37:07'),
-(11, 48, 49, 'lol', NULL, 1, '2017-08-01 05:52:57');
+(11, 48, 49, 'lol', NULL, 1, '2017-08-01 05:52:57'),
+(12, 49, 4, 'Hello!', NULL, 0, '2017-08-10 09:19:35'),
+(13, 49, 4, '???', NULL, 0, '2017-08-10 09:19:48');
 
 -- --------------------------------------------------------
 
@@ -144,14 +146,36 @@ CREATE TABLE IF NOT EXISTS `push_notifications` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `message` int(11) DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `push_notifications`
 --
 
 INSERT INTO `push_notifications` (`id`, `user_id`, `message`) VALUES
-(2, 65, 0);
+(2, 65, 0),
+(3, 66, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `token_devices`
+--
+
+CREATE TABLE IF NOT EXISTS `token_devices` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `token_device` varchar(255) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `token_devices`
+--
+
+INSERT INTO `token_devices` (`id`, `user_id`, `token_device`) VALUES
+(4, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad147'),
+(5, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad154'),
+(6, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581123a8916ad154');
 
 -- --------------------------------------------------------
 
@@ -167,29 +191,29 @@ CREATE TABLE IF NOT EXISTS `user` (
   `country` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `auth_key` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `token_device` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `status` smallint(6) NOT NULL DEFAULT '10',
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Дамп данных таблицы `user`
 --
 
-INSERT INTO `user` (`id`, `avatar`, `username`, `phone`, `country`, `city`, `auth_key`, `token_device`, `password_hash`, `password_reset_token`, `email`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'No image', 'Admin2', '+380961349361', 'Ukraine', 'Dnepr', 'UTo8q7LX4oqzNWicwZE7txlyFy8QQlXf', 'sefrgdfhjasf45', '$2y$13$Cpfx0YCGiAurf8BSEXwfBuZU0xChbf7xa.oAwrA4EVVPRMJg17soe', NULL, 'prybylov.v@gmail.com', 10, 1490176869, 1499693246),
-(4, NULL, 'vasya', NULL, NULL, NULL, 'UTo8q7LX4oqzNWicwZE7txFy8QQlXf', 'w45gfwerg4w', '$2y$13$jdKfU1vtbmHEY.P8Wg7W4.40CHL7BZU5yKbjnWsY0qtg2.a58V81S', NULL, 'vlad.vasyakot@mail.ru', 10, 1490185426, 1498065976),
-(25, NULL, 'Ivan', '+380965789561', 'Ukraine', 'Dnepr', 'QMUgL-s73gweAoRId7DtaGox5RvnQM6M', 'ws4grgw54tw', '$2y$13$IvaNOxMlXmjR5R92b.JQpeJXTPQtajd6bTvZ871lbpwj5qEK3RVQu', NULL, 'gogo@gmail.com', 10, 1498927666, 1498927666),
-(32, NULL, 'Test', '+380965789361', 'Ukraine', 'Dnepr', 'g9wWgZJYX7RfFb27IVjmMXITEm4_Bs71', 'sdfgsfdgw54tw', '$2y$13$bQdW/E87rLC77JYo/nnTbuN6eM5K5t9T4ROizsCLwHB.2V99ZtXE2', NULL, 'test@gmail.com', 10, 1499068290, 1499068290),
-(33, '123', 'Test22', '+380965709361', 'Ukraine', 'Dnepr', 'rfgwEHhhL26as-NSs-Du6C-zoljPdtWZ', 'q4fqx', '$2y$13$lUL9.MXlRlL3m72kSLJUhOzX6v3kwzUuM9B0nU5en4SQHNpEl6oNO', NULL, 'test13@gmail.com', 10, 1499069761, 1499163936),
-(39, 'avatars/595cc61359cdb.png', 'hhhh', '+380665709361', 'Ukraine', 'Dnepr', 'DItENCEhn1PbgZOugFgSRQCPAdxvMraF', 'q4fq4xf4qfs', '$2y$13$yk6IC1ZIM0kAi8BCKdJMPuPFbvVDMr2ZZI0P2at9o62Y/wBvS011C', NULL, 'alalal@gmail.com', 10, 1499170554, 1499252243),
-(48, 'No image', 'Vas1ya', '+380965509361', 'Ukraine', 'Dnepr', 'xt1ZdqnHIi2eCQpvcy91e2HgC34sxe1Z', 'afsew4f4qwf4', '$2y$13$I5zo.7rM.bSB.f2/IRWptepfF5ND/T/HzHerth0Nx7gl.Blo4IjXW', NULL, 't@gmail.com', 10, 1499259965, 1499259965),
-(49, 'https://media.licdn.com/mpr/mprx/0_0gzKp967bYU6a6tbJudBsFUEkaVw2Q-kp0d12eV79lVmgExkmNdnfhQdNaVI2o1FeuHBIYFdbIRIxBtas9k0IDbfrIRwxBmFe9ktY9U75AECxh0metNPNdvxUm', 'Влад Прибылов', NULL, NULL, NULL, 'RTPqDS1ROSl4mEL-Rdn1AMHv-wwck8SO', 'fdgsdtg45egw5', '$2y$13$ffIT4ujZrFBfjO.WGKSowue6d8.EVcaAh28SqGKTvC6Ir4uguOHXq', NULL, 'prybylov.v2@gmail.com', 10, 1499667691, 1499667691),
-(65, 'No image', 'Vasya', '+380365789361', 'Ukraine', 'Dnepr', 'SmVemdUJ16CUGMxof2bMt2amjDC_Rbbt', '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad147', '$2y$13$Jtknp92IxHk4pwzitSTW8eXZCJ8cQybWDT6C1zaTsVpOgopK.dQxC', NULL, 'test123@gmail.com', 10, 1501834382, 1501834382);
+INSERT INTO `user` (`id`, `avatar`, `username`, `phone`, `country`, `city`, `auth_key`, `password_hash`, `password_reset_token`, `email`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'No image', 'Admin2', '+380961349361', 'Ukraine', 'Dnepr', 'UTo8q7LX4oqzNWicwZE7txlyFy8QQlXf', '$2y$13$Cpfx0YCGiAurf8BSEXwfBuZU0xChbf7xa.oAwrA4EVVPRMJg17soe', NULL, 'prybylov.v@gmail.com', 10, 1490176869, 1499693246),
+(4, NULL, 'vasya', NULL, NULL, NULL, 'UTo8q7LX4oqzNWicwZE7txFy8QQlXf', '$2y$13$jdKfU1vtbmHEY.P8Wg7W4.40CHL7BZU5yKbjnWsY0qtg2.a58V81S', NULL, 'vlad.vasyakot@mail.ru', 10, 1490185426, 1498065976),
+(25, NULL, 'Ivan', '+380965789561', 'Ukraine', 'Dnepr', 'QMUgL-s73gweAoRId7DtaGox5RvnQM6M', '$2y$13$IvaNOxMlXmjR5R92b.JQpeJXTPQtajd6bTvZ871lbpwj5qEK3RVQu', NULL, 'gogo@gmail.com', 10, 1498927666, 1498927666),
+(32, NULL, 'Test', '+380965789361', 'Ukraine', 'Dnepr', 'g9wWgZJYX7RfFb27IVjmMXITEm4_Bs71', '$2y$13$bQdW/E87rLC77JYo/nnTbuN6eM5K5t9T4ROizsCLwHB.2V99ZtXE2', NULL, 'test@gmail.com', 10, 1499068290, 1499068290),
+(33, '123', 'Test22', '+380965709361', 'Ukraine', 'Dnepr', 'rfgwEHhhL26as-NSs-Du6C-zoljPdtWZ', '$2y$13$lUL9.MXlRlL3m72kSLJUhOzX6v3kwzUuM9B0nU5en4SQHNpEl6oNO', NULL, 'test13@gmail.com', 10, 1499069761, 1499163936),
+(39, 'avatars/595cc61359cdb.png', 'hhhh', '+380665709361', 'Ukraine', 'Dnepr', 'DItENCEhn1PbgZOugFgSRQCPAdxvMraF', '$2y$13$yk6IC1ZIM0kAi8BCKdJMPuPFbvVDMr2ZZI0P2at9o62Y/wBvS011C', NULL, 'alalal@gmail.com', 10, 1499170554, 1499252243),
+(48, 'No image', 'Vas1ya', '+380965509361', 'Ukraine', 'Dnepr', 'xt1ZdqnHIi2eCQpvcy91e2HgC34sxe1Z', '$2y$13$I5zo.7rM.bSB.f2/IRWptepfF5ND/T/HzHerth0Nx7gl.Blo4IjXW', NULL, 't@gmail.com', 10, 1499259965, 1499259965),
+(49, 'https://media.licdn.com/mpr/mprx/0_0gzKp967bYU6a6tbJudBsFUEkaVw2Q-kp0d12eV79lVmgExkmNdnfhQdNaVI2o1FeuHBIYFdbIRIxBtas9k0IDbfrIRwxBmFe9ktY9U75AECxh0metNPNdvxUm', 'Влад Прибылов', '+380678954670', 'Ukraine', 'Dnepr', 'RTPqDS1ROSl4mEL-Rdn1AMHv-wwck8SO', '$2y$13$ffIT4ujZrFBfjO.WGKSowue6d8.EVcaAh28SqGKTvC6Ir4uguOHXq', NULL, 'prybylov.v2@gmail.com', 10, 1499667691, 1499667691),
+(65, 'No image', 'Vasya', '+380365789361', 'Ukraine', 'Dnepr', 'SmVemdUJ16CUGMxof2bMt2amjDC_Rbbt', '$2y$13$Jtknp92IxHk4pwzitSTW8eXZCJ8cQybWDT6C1zaTsVpOgopK.dQxC', NULL, 'test123@gmail.com', 10, 1501834382, 1501834382),
+(66, 'No image', 'Vasya123', '+380965989361', 'Ukraine', 'Dnepr', 'qAV3RSbRBVlEE2LOt-784bGaE4KLu81W', '$2y$13$sH0sWyZuYhbQWGJAwIvsWuTmzgIJ/XhnH9dV9BTC0C8PNBXIq.gwi', NULL, 'test_vasya@gmail.com', 10, 1502704190, 1502706325);
 
 --
 -- Индексы сохранённых таблиц
@@ -240,6 +264,13 @@ ALTER TABLE `push_notifications`
   ADD KEY `push_notifications_ibfk_1` (`user_id`);
 
 --
+-- Индексы таблицы `token_devices`
+--
+ALTER TABLE `token_devices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `token_devices_ibfk_1` (`user_id`);
+
+--
 -- Индексы таблицы `user`
 --
 ALTER TABLE `user`
@@ -265,7 +296,7 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT для таблицы `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT для таблицы `post`
 --
@@ -280,12 +311,17 @@ ALTER TABLE `post_image`
 -- AUTO_INCREMENT для таблицы `push_notifications`
 --
 ALTER TABLE `push_notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT для таблицы `token_devices`
+--
+ALTER TABLE `token_devices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=66;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=67;
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
@@ -322,6 +358,12 @@ ALTER TABLE `post_image`
 --
 ALTER TABLE `push_notifications`
   ADD CONSTRAINT `push_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `token_devices`
+--
+ALTER TABLE `token_devices`
+  ADD CONSTRAINT `token_devices_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

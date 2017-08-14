@@ -4,6 +4,7 @@ namespace app\controllers\api;
 
 use app\models\Message;
 use app\models\PushNotifications;
+use app\models\TokenDevices;
 use Yii;
 use yii\web\Response;
 use yii\rest\ActiveController;
@@ -53,17 +54,25 @@ class MessageController extends ActiveController
                 $push_flags = PushNotifications::findOne(['user_id' => $model->recepient_id]);
                 if(isset($push_flags)){
                     if($push_flags->message == 1){
+                        $tokens = TokenDevices::find()->where(['user_id' => $model->recepient_id])->all();
                         $apns = Yii::$app->apns;
                         $push_text = $sender->username.' sent you '.$model->message;
-                        $apns->send($model->recepient_token_device, $push_text,
-                            [
-                                'message_id' => $model->id,
-                                'sender_id' => $sender->id
-                            ],
-                            [
-                                'sound' => 'default',
-                                'badge' => 1
-                            ]);
+                        if(isset($tokens)){
+                            foreach ($tokens as $token){
+                                if($token->token_device != 'SIMULATOR'){
+                                    $apns->send($token->token_device, $push_text,
+                                        [
+                                            'message_id' => $model->id,
+                                            'sender_id' => $sender->id
+                                        ],
+                                        [
+                                            'sound' => 'default',
+                                            'badge' => 1
+                                        ]
+                                    );
+                                }
+                            }
+                        }
                     }
                 }
                 return array(
@@ -103,17 +112,25 @@ class MessageController extends ActiveController
                 $push_flags = PushNotifications::findOne(['user_id' => $model->recepient_id]);
                 if(isset($push_flags)){
                     if($push_flags->message == 1){
+                        $tokens = TokenDevices::find()->where(['user_id' => $model->recepient_id])->all();
                         $apns = Yii::$app->apns;
                         $push_text = $sender->username.' sent you photo';
-                        $apns->send($model->recepient_token_device, $push_text,
-                            [
-                                'message_id' => $model->id,
-                                'sender_id' => $sender->id
-                            ],
-                            [
-                                'sound' => 'default',
-                                'badge' => 1
-                            ]);
+                        if(isset($tokens)){
+                            foreach ($tokens as $token){
+                                if($token->token_device != 'SIMULATOR') {
+                                    $apns->send($token->token_device, $push_text,
+                                        [
+                                            'message_id' => $model->id,
+                                            'sender_id' => $sender->id
+                                        ],
+                                        [
+                                            'sound' => 'default',
+                                            'badge' => 1
+                                        ]
+                                    );
+                                }
+                            }
+                        }
                     }
                 }
                 return array(

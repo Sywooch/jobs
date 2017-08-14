@@ -43,8 +43,8 @@ class Message extends \yii\db\ActiveRecord
     public function SendMessage($sender, $request)
     {
         if(isset($request['recepient_id'])){
-            $recepient = User::findOne(['id' => $request['recepient_id']]);
-            $this->recepient_token_device = $recepient->token_device;
+//            $recepient = User::findOne(['id' => $request['recepient_id']]);
+//            $this->recepient_token_device = $recepient->token_device;
             $this->sender_id = $sender->id;
             $this->recepient_id = $request['recepient_id'];
             $this->message = $request['message'];

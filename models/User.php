@@ -25,7 +25,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
 
-            [['avatar', 'token_device'], 'string', 'max' => 255],
+            [['avatar'], 'string', 'max' => 255],
 //            ['username', 'required'],
 
             [['country', 'city'], 'string', 'max' => 100],
@@ -126,6 +126,26 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
     }
 
+    public function deleteToken($user_id, $token)
+    {
+        $tokens = TokenDevices::find()
+            ->where([
+                'user_id' => $user_id,
+            ])
+            ->all();
+
+        if($tokens){
+            foreach($tokens as $token_d) {
+                if($token_d->token_device == $token){
+                    $token_d->delete();
+                    return true;
+                }
+            }
+        } else {
+            return true;
+        }
+    }
+
     public function generatePasswordResetToken()
     {
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
@@ -157,14 +177,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $user->phone = $this->phone;
         $user->country = $this->country;
         $user->city = $this->city;
-        $user->token_device = $request['User']['token_device'];
         $user->setPassword($request['User']['password']);
         $user->generateAuthKey();
         $user->status = 10;
 
         if($user->save()){
             $model = new PushNotifications();
+            $token = new TokenDevices();
+            $token->user_id = $user->getPrimaryKey();
+            $token->token_device = $request['User']['token_device'];
             $model->user_id = $user->getPrimaryKey();
+            $token->save(false);
             $model->save(false);
             return true;
         } else {
@@ -189,15 +212,34 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $result = json_decode($result);
 
         $user = new User();
+        $flag = false;
         $user->email = $result->email;
         if($this->findByEmail($result->email)){
             $user = $this->findByEmail($result->email);
             $this->auth_key = $user->auth_key;
-            if($user->token_device != $token_device){
-                $user->token_device = $token_device;
-                $user->save(false);
+            $token = TokenDevices::find()->where(['user_id'=>$user->id, 'token_device'=>$token_device])->all();
+            if($token){
+                foreach ($token as $item){
+                    if($item->token_device == $token_device){
+                        return true;
+                    } else {
+                        $flag = true;
+                    }
+                }
+                if($flag == true){
+                    $token_model = new TokenDevices();
+                    $token_model->user_id = $user->id;
+                    $token_model->token_device = $token_device;
+                    $token_model->save(false);
+                    return true;
+                }
+            } else {
+                $token_model = new TokenDevices();
+                $token_model['user_id'] = $user->id;
+                $token_model->token_device = $token_device;
+                $token_model->save(false);
+                return true;
             }
-            return $this->auth_key;
         }
         $user->username = $result->name;
         $this->username = $result->name;
@@ -206,12 +248,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $this->avatar = $result->picture;
         $user->setPassword($result->id);
         $user->generateAuthKey();
-        $user->token_device = $token_device;
         $user->status = 10;
 
         if($user->save()){
             $model = new PushNotifications();
+            $token_model = new TokenDevices();
+
             $model->user_id = $user->getPrimaryKey();
+            $token_model->user_id = $user->getPrimaryKey();
+            $token_model->token_device = $token_device;
+
+            $token_model->save(false);
             $model->save(false);
             return true;
         } else {
@@ -236,12 +283,32 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $result = json_decode($result);
 
         $user = new User();
+        $flag = false;
         if($this->findByEmail($result->email)){
             $user = $this->findByEmail($result->email);
             $this->auth_key = $user->auth_key;
-            if($user->token_device != $token_device){
-                $user->token_device = $token_device;
-                $user->save(false);
+            $token = TokenDevices::find()->where(['user_id'=>$user->id, 'token_device'=>$token_device])->all();
+            if($token){
+                foreach ($token as $item){
+                    if($item->token_device == $token_device){
+                        return true;
+                    } else {
+                        $flag = true;
+                    }
+                }
+                if($flag == true){
+                    $token_model = new TokenDevices();
+                    $token_model->user_id = $user->id;
+                    $token_model->token_device = $token_device;
+                    $token_model->save(false);
+                    return true;
+                }
+            } else {
+                $token_model = new TokenDevices();
+                $token_model['user_id'] = $user->id;
+                $token_model->token_device = $token_device;
+                $token_model->save(false);
+                return true;
             }
         }
         $user->username = $result->name;
@@ -256,12 +323,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         $user->setPassword($result->id);
         $user->generateAuthKey();
-        $user->token_device = $token_device;
         $user->status = 10;
 
         if($user->save()){
             $model = new PushNotifications();
+            $token_model = new TokenDevices();
+
             $model->user_id = $user->getPrimaryKey();
+            $token_model->user_id = $user->getPrimaryKey();
+            $token_model->token_device = $token_device;
+
+            $token_model->save(false);
             $model->save(false);
             return true;
         } else {
@@ -286,13 +358,33 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         curl_close($ch);
 
         $user = new User();
+        $flag = false;
         $user->email = $result->emailAddress;
         if($this->findByEmail($result->emailAddress)){
             $user = $this->findByEmail($result->email);
             $this->auth_key = $user->auth_key;
-            if($user->token_device != $token_device){
-                $user->token_device = $token_device;
-                $user->save(false);
+            $token = TokenDevices::find()->where(['user_id'=>$user->id, 'token_device'=>$token_device])->all();
+            if($token){
+                foreach ($token as $item){
+                    if($item->token_device == $token_device){
+                        return true;
+                    } else {
+                        $flag = true;
+                    }
+                }
+                if($flag == true){
+                    $token_model = new TokenDevices();
+                    $token_model->user_id = $user->id;
+                    $token_model->token_device = $token_device;
+                    $token_model->save(false);
+                    return true;
+                }
+            } else {
+                $token_model = new TokenDevices();
+                $token_model['user_id'] = $user->id;
+                $token_model->token_device = $token_device;
+                $token_model->save(false);
+                return true;
             }
         }
         $user->username = $result->formattedName;
@@ -306,12 +398,18 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         $user->setPassword($result->id);
         $user->generateAuthKey();
-        $user->token_device = $token_device;
         $user->status = 10;
 
         if($user->save()){
             $model = new PushNotifications();
+            $token_model = new TokenDevices();
+
             $model->user_id = $user->getPrimaryKey();
+            $token_model->user_id = $user->getPrimaryKey();
+            $token_model->token_device = $token_device;
+
+            $token_model->save(false);
+
             $model->save(false);
             return true;
         } else {
@@ -324,13 +422,32 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         $user = $this->findByEmail($request['email']);
         $token_device = $request['token_device'];
+        $flag = false;
         if($user){
             if(Yii::$app->security->validatePassword($request['password'], $user->password_hash)){
-                if($user->token_device != $token_device){
-                    $user->token_device = $token_device;
-                    $user->save(false);
+                $token = TokenDevices::find()->where(['user_id'=>$user->id, 'token_device'=>$token_device])->all();
+                if($token){
+                    foreach ($token as $item){
+                        if($item->token_device == $token_device){
+                            return true;
+                        } else {
+                            $flag = true;
+                        }
+                    }
+                    if($flag == true){
+                        $token_model = new TokenDevices();
+                        $token_model->user_id = $user->id;
+                        $token_model->token_device = $token_device;
+                        $token_model->save(false);
+                        return true;
+                    }
+                } else {
+                    $token_model = new TokenDevices();
+                    $token_model['user_id'] = $user->id;
+                    $token_model->token_device = $token_device;
+                    $token_model->save(false);
+                    return true;
                 }
-                return true;
             } else {
                 return false;
             }
