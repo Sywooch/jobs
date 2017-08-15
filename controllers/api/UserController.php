@@ -316,7 +316,8 @@ class UserController extends ActiveController
         $model = new User();
         $token = Yii::$app->request->post('token_device');
 
-        if($model->regenerateAuthKey(Yii::$app->user->getId()) && $model->deleteToken(Yii::$app->user->getId(), $token)){
+//        if($model->regenerateAuthKey(Yii::$app->user->getId()) && $model->deleteToken(Yii::$app->user->getId(), $token)){
+        if($model->deleteToken(Yii::$app->user->getId(), $token)){
             $response = array(
                 'status' => 200,
                 'message' => 'Successfully logout.'
