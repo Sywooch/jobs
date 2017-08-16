@@ -18,7 +18,7 @@ $config = [
         ],
         'fcm' => [
             'class' => 'understeam\fcm\Client',
-            'apiKey' => 'AAAAow2pYqA:APA91bH-SbNWynEZyXM08neqykRWzltVjKvhc95Y_1Vv6ra1BCnGUT2Pyxxzr4aeeEeU2lY7q_GBRNkqWEX8HQsei-cdy9Rwbe1QQgXm__c2rgF7aQUgVryKoYMIAlV4ibemJmwq_Eq7',
+            'apiKey' => 'AAAAwshBTgc:APA91bEug0iTVwr2n-oYhsTbbcJnOVim8Od6lI9320uxJcMHwdKboGGrqgcd6ZfRn0uH4a9Uf7YeOlxTQ5WYlV3STIKmkmYSCHIpmec0_5Bk-aZ5_qeD7ClGuxSJazgKrfv1RmC6LN7-',
         ],
         'request' => [
             'baseUrl'=> '',

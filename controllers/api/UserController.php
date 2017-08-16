@@ -377,13 +377,14 @@ class UserController extends ActiveController
             ->setBadge(1);
 
         $message = Yii::$app->fcm->createMessage();
-        $message->addRecipient(new Device('123'));
+        $message->addRecipient(new Device('dqRiQqQ-vbQ:APA91bFAjevbV2kHMkgy9JRO-6Rf2yf4bjrvUH6_aQYv-8Tp6ugTwThBlw7k2Wr2Vue0TumDij-4kWdWzJBQkwZihq6FXVui0vLp8cMGeAT4MtW7aJaWr8f2RIQgUo7PeQw_ONBJcHIo'));
         $message->setNotification($note)
             ->setData(['test_id' => 1]);
 
-        $response = Yii::$app->fcm->send($message);
+//        $response = Yii::$app->fcm->send($message);
 
-        return $response->getStatusCode();
+//        return $response->getStatusCode();
+        return Yii::$app->fcm->send($message);;
 
     }
 }
