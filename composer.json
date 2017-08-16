@@ -11,7 +11,8 @@
         "yiisoft/yii2": ">=2.0.5",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "bryglen/yii2-apns-gcm": "1.0.5"
+        "bryglen/yii2-apns-gcm": "1.0.5",
+        "paragraph1/php-fcm": "^0.7.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
