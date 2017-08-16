@@ -10,6 +10,7 @@ use yii\rest\ActiveController;
 use app\models\User;
 use yii\web\UploadedFile;
 
+
 class UserController extends ActiveController
 {
 
@@ -365,10 +366,23 @@ class UserController extends ActiveController
     //Authorization test
     public function actionTest()
     {
-        $user = Yii::$app->user->identity;
-        return array(
-            'message' => 'Auth OK!',
-            'user' => $user
-        );
+//        $user = Yii::$app->user->identity;
+//        return array(
+//            'message' => 'Auth OK!',
+//            'user' => $user
+//        );
+        $note = Yii::$app->fcm->createNotification("Title", "Working?");
+        $note->setColor('#ffffff')
+            ->setBadge(1);
+
+        $message = Yii::$app->fcm->createMessage();
+        $message->addRecipient(new Device('your-device-token'));
+        $message->setNotification($note)
+            ->setData(['test_id' => 1]);
+
+        $response = Yii::$app->fcm->send($message);
+
+        return $response->getStatusCode();
+
     }
 }

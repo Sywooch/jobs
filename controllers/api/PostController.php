@@ -106,7 +106,17 @@ class PostController extends ActiveController
                     return array(
                         'status' => 200,
                         'message' => 'Post successfully updated.',
-                        'post' => $post
+                        'post' => array(
+                            'id' => $post->id,
+                            'specification' => $post->specification,
+                            'title' => $post->title,
+                            'price' => $post->price,
+                            'categoryID' => $post->category_id,
+                            'latitude' => $post->latitude,
+                            'longitude' => $post->longitude,
+                            'status' => $post->status,
+                            'user_id' => $post->user_id
+                        )
                     );
                 } else{
                     return array(

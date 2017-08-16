@@ -16,6 +16,10 @@ $config = [
                 'sendRetryTimes' => 5
             ]
         ],
+        'fcm' => [
+            'class' => 'understeam\fcm\Client',
+            'apiKey' => 'AIzaSyDwwPnDwLJCV-aGRH5P5l66s-Dlk__i4J0 ',
+        ],
         'request' => [
             'baseUrl'=> '',
             'enableCookieValidation' => false,

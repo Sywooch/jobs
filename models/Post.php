@@ -36,7 +36,7 @@ class Post extends \yii\db\ActiveRecord
     public function UserPosts($user)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT  post.id, post.user_id as creatorID, post.specification,
+            'sql' => "SELECT  post.id AS post_id, post.user_id as creatorID, post.specification,
                 post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
                 FROM post   
                 LEFT JOIN post_image 
@@ -55,7 +55,7 @@ class Post extends \yii\db\ActiveRecord
     public function PostsByCategory($category_id)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT  post.id, post.user_id as creatorID, post.specification,
+            'sql' => "SELECT  post.id AS post_id, post.user_id as creatorID, post.specification,
                 post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
                 FROM post
                 LEFT JOIN post_image 
@@ -92,7 +92,7 @@ class Post extends \yii\db\ActiveRecord
 
         $response = [
             array(
-                'id' => $post->id,
+                'post_id' => $post->id,
                 'title' => $post->title,
                 'price' => $post->price,
                 'specification' => $post->specification,
@@ -100,7 +100,8 @@ class Post extends \yii\db\ActiveRecord
                 'creatorId' => $post->user_id,
                 'latitude' => $post->latitude,
                 'longitude' => $post->longitude,
-                'categoryName' => $post->category->name
+                'categoryName' => $post->category->name,
+                'categoryID' => $post->category->id
             )
         ];
 
@@ -111,7 +112,7 @@ class Post extends \yii\db\ActiveRecord
     public function PostSearch($title)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT  post.id, post.user_id as creatorID, post.specification,
+            'sql' => "SELECT  post.id AS post_id, post.user_id as creatorID, post.specification,
                 post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
                 FROM post
                 LEFT JOIN post_image 
