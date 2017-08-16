@@ -3,6 +3,7 @@
 namespace app\controllers\api;
 
 use app\models\PushNotifications;
+use paragraph1\phpFCM\Recipient\Device;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\web\Response;
@@ -376,7 +377,7 @@ class UserController extends ActiveController
             ->setBadge(1);
 
         $message = Yii::$app->fcm->createMessage();
-        $message->addRecipient(new Device('your-device-token'));
+        $message->addRecipient(new Device('123'));
         $message->setNotification($note)
             ->setData(['test_id' => 1]);
 

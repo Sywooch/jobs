@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a34460362242cb89cb5182545cf1d728",
+    "content-hash": "91c012e55a3bd60ee030b20e1d1da5b3",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -781,6 +781,43 @@
                 "mailer"
             ],
             "time": "2017-05-01T15:54:03+00:00"
+        },
+        {
+            "name": "understeam/yii2-fcm",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Understeam/yii2-fcm.git",
+                "reference": "ab76ae5c39d6ebf8a82c6d9cfd2de914f93606ff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Understeam/yii2-fcm/zipball/ab76ae5c39d6ebf8a82c6d9cfd2de914f93606ff",
+                "reference": "ab76ae5c39d6ebf8a82c6d9cfd2de914f93606ff",
+                "shasum": ""
+            },
+            "require": {
+                "paragraph1/php-fcm": "^0.7",
+                "yiisoft/yii2": "^2"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "understeam\\fcm\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anatoly Rugalev",
+                    "email": "anatoly.rugalev@gmail.com"
+                }
+            ],
+            "description": "Yii2 Firebase Cloud Messaging adapter",
+            "time": "2016-11-11T13:22:11+00:00"
         },
         {
             "name": "yiisoft/yii2",

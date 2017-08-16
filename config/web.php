@@ -17,8 +17,8 @@ $config = [
             ]
         ],
         'fcm' => [
-            'class' => 'paragraph1\phpFCM\Client',
-            'apiKey' => 'AIzaSyDwwPnDwLJCV-aGRH5P5l66s-Dlk__i4J0',
+            'class' => 'understeam\fcm\Client',
+            'apiKey' => 'AAAAow2pYqA:APA91bH-SbNWynEZyXM08neqykRWzltVjKvhc95Y_1Vv6ra1BCnGUT2Pyxxzr4aeeEeU2lY7q_GBRNkqWEX8HQsei-cdy9Rwbe1QQgXm__c2rgF7aQUgVryKoYMIAlV4ibemJmwq_Eq7',
         ],
         'request' => [
             'baseUrl'=> '',
