@@ -72,7 +72,6 @@ $config = [
                 'api/add-favorite' => '/api/favorite/add-favorite',
                 'api/favorites' => '/api/favorite/favorites',
                 'api/remove-favorite' => '/api/favorite/remove-favorite',
-                'api/push' => '/api/user/push',
                 'api/send-message' => '/api/message/send-message',
                 'api/get-message' => '/api/message/get-message',
                 'api/upload-message-photo' => '/api/message/upload-message-photo',

@@ -17,7 +17,8 @@ class TokenDevices extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'token_device'], 'required'],
-            [['token_device'], 'string', 'max' => 255]
+            [['token_device'], 'string', 'max' => 255],
+            [['is_ios'], 'integer']
         ];
     }
 

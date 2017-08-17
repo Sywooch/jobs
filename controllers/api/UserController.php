@@ -47,25 +47,9 @@ class UserController extends ActiveController
         $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
-            'except' => ['index', 'login', 'glogin', 'flogin', 'llogin', 'push'],
+            'except' => ['index', 'login', 'glogin', 'flogin', 'llogin'],
         ];
         return $behaviors;
-    }
-
-    public function actionPush()
-    {
-        $apns = Yii::$app->apns;
-        $token = '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad147';
-        if($apns->send($token, 'Ho ho ho!!!',
-            [
-                'sound' => 'default',
-                'badge' => 1
-            ]
-        )) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 
     //Basic register

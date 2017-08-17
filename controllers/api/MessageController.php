@@ -54,26 +54,7 @@ class MessageController extends ActiveController
                 $push_flags = PushNotifications::findOne(['user_id' => $model->recepient_id]);
                 if(isset($push_flags)){
                     if($push_flags->message == 1){
-                        $token_devices = TokenDevices::findAll(['user_id'=>$model->recepient_id]);
-                        $push_text = $sender->username.' sent you '.$model->message;
-                        if(isset($token_devices)){
-                            foreach ($token_devices as $t_d){
-                                if($t_d->token_device != 'SIMULATOR'){
-                                    $tokens[] = $t_d->token_device;
-                                }
-                            }
-                            $apns = Yii::$app->apns;
-                            $apns->sendMulti($tokens, $push_text,
-                                [
-                                    'message_id' => $model->id,
-                                    'sender_id' => $sender->id
-                                ],
-                                [
-                                    'sound' => 'default',
-                                    'badge' => 1
-                                ]
-                            );
-                        }
+                        $model->SendMessagePush($sender, $model);
                     }
                 }
                 return array(
@@ -113,26 +94,7 @@ class MessageController extends ActiveController
                 $push_flags = PushNotifications::findOne(['user_id' => $model->recepient_id]);
                 if(isset($push_flags)){
                     if($push_flags->message == 1){
-                        $token_devices = TokenDevices::find()->where(['user_id' => $model->recepient_id])->all();
-                        $push_text = $sender->username.' sent you photo';
-                        if(isset($token_devices)){
-                            foreach ($token_devices as $t_d){
-                                if($t_d->token_device != 'SIMULATOR'){
-                                    $tokens[] = $t_d->token_device;
-                                }
-                            }
-                            $apns = Yii::$app->apns;
-                            $apns->sendMulti($tokens, $push_text,
-                                [
-                                    'message_id' => $model->id,
-                                    'sender_id' => $sender->id
-                                ],
-                                [
-                                    'sound' => 'default',
-                                    'badge' => 1
-                                ]
-                            );
-                        }
+                        $model->SendMessagePhotoPush($sender, $model);
                     }
                 }
                 return array(

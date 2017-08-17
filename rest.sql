@@ -2,9 +2,9 @@
 -- version 4.4.15.7
 -- http://www.phpmyadmin.net
 --
--- Хост: 127.0.0.1:3306
--- Время создания: Авг 14 2017 г., 16:44
--- Версия сервера: 5.6.31
+-- Хост: 127.0.0.1:3307
+-- Время создания: Авг 17 2017 г., 06:04
+-- Версия сервера: 5.5.50
 -- Версия PHP: 5.6.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -165,17 +165,18 @@ INSERT INTO `push_notifications` (`id`, `user_id`, `message`) VALUES
 CREATE TABLE IF NOT EXISTS `token_devices` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `token_device` varchar(255) NOT NULL
+  `token_device` varchar(255) NOT NULL,
+  `is_ios` int(11) DEFAULT '1'
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `token_devices`
 --
 
-INSERT INTO `token_devices` (`id`, `user_id`, `token_device`) VALUES
-(4, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad147'),
-(5, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad154'),
-(6, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581123a8916ad154');
+INSERT INTO `token_devices` (`id`, `user_id`, `token_device`, `is_ios`) VALUES
+(4, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad147', 1),
+(5, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581a8916ad154', 1),
+(6, 66, '9d173d4d98720d9b650c083f5dec5628273b38cfd2e15a5e937581123a8916ad154', 1);
 
 -- --------------------------------------------------------
 

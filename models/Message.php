@@ -247,5 +247,98 @@ class Message extends \yii\db\ActiveRecord
 
         return $dataProvider;
     }
+    
+    //Send message push 
+    public function SendMessagePush($sender, $model)
+    {
+        $token_devices = TokenDevices::findAll(['user_id'=>$model->recepient_id]);
+        $push_text = $sender->username.' sent you '.$model->message;
+        if(isset($token_devices)){
+            foreach ($token_devices as $t_d){
+                if($t_d->token_device != 'SIMULATOR' && $t_d->is_ios == 1){
+                    $tokens_ios[] = $t_d->token_device;
+                }
+                if($t_d->token_device != 'SIMULATOR' && $t_d->is_ios == 0){
+                    $tokens_android[] = $t_d->token_device;
+                }
+            }
+            if(isset($tokens_ios)) {
+                $apns = Yii::$app->apns;
+                $apns->sendMulti($tokens_ios, $push_text,
+                    [
+                        'message_id' => $model->id,
+                        'sender_id' => $sender->id
+                    ],
+                    [
+                        'sound' => 'default',
+                        'badge' => 1
+                    ]
+                );
+            }
+            if(isset($tokens_android)){
+                $note = Yii::$app->fcm->createNotification("New message", $push_text);
+                $note->setColor('#ffffff')
+                    ->setBadge(1);
+
+                $message = Yii::$app->fcm->createMessage();
+                foreach($tokens_android as $t_a){
+                    $message->addRecipient(new Device($t_a));
+                }
+                $message->setNotification($note)
+                    ->setData([
+                        'message_id' => $model->id,
+                        'sender_id' => $sender->id
+                    ]);
+            }
+
+        }
+        return true;
+    }
+
+    //Send message photo push 
+    public function SendMessagePhotoPush($sender, $model)
+    {
+        $token_devices = TokenDevices::find()->where(['user_id' => $model->recepient_id])->all();
+        $push_text = $sender->username.' sent you photo';
+        if(isset($token_devices)){
+            foreach ($token_devices as $t_d){
+                if($t_d->token_device != 'SIMULATOR' && $t_d->is_ios == 1){
+                    $tokens_ios[] = $t_d->token_device;
+                }
+                if($t_d->token_device != 'SIMULATOR' && $t_d->is_ios == 0){
+                    $tokens_android[] = $t_d->token_device;
+                }
+            }
+            if(isset($tokens_ios)){
+                $apns = Yii::$app->apns;
+                $apns->sendMulti($tokens_ios, $push_text,
+                    [
+                        'message_id' => $model->id,
+                        'sender_id' => $sender->id
+                    ],
+                    [
+                        'sound' => 'default',
+                        'badge' => 1
+                    ]
+                );
+            }
+            if(isset($tokens_android)){
+                $note = Yii::$app->fcm->createNotification("New photo", $push_text);
+                $note->setColor('#ffffff')
+                    ->setBadge(1);
+
+                $message = Yii::$app->fcm->createMessage();
+                foreach($tokens_android as $t_a){
+                    $message->addRecipient(new Device($t_a));
+                }
+                $message->setNotification($note)
+                    ->setData([
+                        'message_id' => $model->id,
+                        'sender_id' => $sender->id
+                    ]);
+            }
+        }
+        return true;
+    }
 
 }
