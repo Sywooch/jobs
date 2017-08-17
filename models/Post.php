@@ -97,7 +97,7 @@ class Post extends \yii\db\ActiveRecord
                 'price' => $post->price,
                 'specification' => $post->specification,
                 'isFavorite' => $flag,
-                'creatorId' => $post->user_id,
+                'creatorID' => $post->user_id,
                 'latitude' => $post->latitude,
                 'longitude' => $post->longitude,
                 'categoryName' => $post->category->name,

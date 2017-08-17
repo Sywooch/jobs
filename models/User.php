@@ -186,6 +186,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $token = new TokenDevices();
             $token->user_id = $user->getPrimaryKey();
             $token->token_device = $request['User']['token_device'];
+            if(isset($request['User']['android'])){
+                $token->is_ios = 0;
+            }
             $model->user_id = $user->getPrimaryKey();
             $token->save(false);
             $model->save(false);
@@ -196,7 +199,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
 
     //Google SignUp
-    public function gregister($accessToken, $token_device)
+    public function gregister($accessToken, $token_device, $android = null)
     {
         $url = 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' . $accessToken;
 
@@ -230,6 +233,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                     $token_model = new TokenDevices();
                     $token_model->user_id = $user->id;
                     $token_model->token_device = $token_device;
+                    if(isset($android)){
+                        $token_model->is_ios = 0;
+                    }
                     $token_model->save(false);
                     return true;
                 }
@@ -237,6 +243,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 $token_model = new TokenDevices();
                 $token_model['user_id'] = $user->id;
                 $token_model->token_device = $token_device;
+                if(isset($android)){
+                    $token_model->is_ios = 0;
+                }
                 $token_model->save(false);
                 return true;
             }
@@ -257,6 +266,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $model->user_id = $user->getPrimaryKey();
             $token_model->user_id = $user->getPrimaryKey();
             $token_model->token_device = $token_device;
+            if(isset($android)){
+                $token_model->is_ios = 0;
+            }
 
             $token_model->save(false);
             $model->save(false);
@@ -267,7 +279,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
 
     //Facebook SignUp
-    public function fregister($accessToken, $token_device)
+    public function fregister($accessToken, $token_device, $android = null)
     {
         $url = 'https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&access_token=' . $accessToken;
 
@@ -300,6 +312,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                     $token_model = new TokenDevices();
                     $token_model->user_id = $user->id;
                     $token_model->token_device = $token_device;
+                    if(isset($android)){
+                        $token_model->is_ios = 0;
+                    }
                     $token_model->save(false);
                     return true;
                 }
@@ -307,6 +322,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 $token_model = new TokenDevices();
                 $token_model['user_id'] = $user->id;
                 $token_model->token_device = $token_device;
+                if(isset($android)){
+                    $token_model->is_ios = 0;
+                }
                 $token_model->save(false);
                 return true;
             }
@@ -332,6 +350,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $model->user_id = $user->getPrimaryKey();
             $token_model->user_id = $user->getPrimaryKey();
             $token_model->token_device = $token_device;
+            if(isset($android)){
+                $token_model->is_ios = 0;
+            }
 
             $token_model->save(false);
             $model->save(false);
@@ -342,7 +363,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
 
     //LinkedIn SignUp
-    public function lregister($accessToken, $token_device)
+    public function lregister($accessToken, $token_device, $android = null)
     {
         $url = 'https://api.linkedin.com/v1/people/~:(id,email-address,formatted-name,picture-urls::(original))?oauth2_access_token=' . $accessToken . '&format=json';
 
@@ -376,6 +397,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                     $token_model = new TokenDevices();
                     $token_model->user_id = $user->id;
                     $token_model->token_device = $token_device;
+                    if(isset($android)){
+                        $token_model->is_ios = 0;
+                    }
                     $token_model->save(false);
                     return true;
                 }
@@ -383,6 +407,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 $token_model = new TokenDevices();
                 $token_model['user_id'] = $user->id;
                 $token_model->token_device = $token_device;
+                if(isset($android)){
+                    $token_model->is_ios = 0;
+                }
                 $token_model->save(false);
                 return true;
             }
@@ -407,6 +434,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $model->user_id = $user->getPrimaryKey();
             $token_model->user_id = $user->getPrimaryKey();
             $token_model->token_device = $token_device;
+            if(isset($android)){
+                $token_model->is_ios = 0;
+            }
 
             $token_model->save(false);
 
@@ -438,6 +468,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                         $token_model = new TokenDevices();
                         $token_model->user_id = $user->id;
                         $token_model->token_device = $token_device;
+                        if(isset($request['android'])){
+                            $token_model->is_ios = 0;
+                        }
                         $token_model->save(false);
                         return true;
                     }
@@ -445,6 +478,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                     $token_model = new TokenDevices();
                     $token_model['user_id'] = $user->id;
                     $token_model->token_device = $token_device;
+                    if(isset($request['android'])){
+                        $token_model->is_ios = 0;
+                    }
                     $token_model->save(false);
                     return true;
                 }
