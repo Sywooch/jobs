@@ -107,7 +107,7 @@ class PostController extends ActiveController
                         'status' => 200,
                         'message' => 'Post successfully updated.',
                         'post' => array(
-                            'id' => $post->id,
+                            'post_id' => $post->id,
                             'specification' => $post->specification,
                             'title' => $post->title,
                             'price' => $post->price,
