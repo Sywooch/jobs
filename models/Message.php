@@ -57,6 +57,13 @@ class Message extends \yii\db\ActiveRecord
     //Find Message by ID
     public function FindMessage($message_id)
     {
+
+        $message = static::findOne(['id' => $message_id]);
+        if($message->status == 0){
+            $message->status = 1;
+            $message->save(false);
+        }
+
         $connection = Yii::$app->db;
         $query = $connection->createCommand(
             "SELECT message.*, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
