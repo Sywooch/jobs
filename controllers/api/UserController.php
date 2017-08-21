@@ -2,6 +2,7 @@
 
 namespace app\controllers\api;
 
+use app\models\Post;
 use app\models\PushNotifications;
 use paragraph1\phpFCM\Recipient\Device;
 use Yii;
@@ -355,7 +356,15 @@ class UserController extends ActiveController
             $user->status = 0;
             $user->email = $user->email.'(deleted)';
             $user->phone = '';
-            $user->save(false);
+            if($user->save(false)){
+                $posts = Post::find()->where(['user_id' => $user->id])->all();
+                if(isset($posts)){
+                    foreach ($posts as $post){
+                        $post->status = 2;
+                        $post->save(false);
+                    }
+                }
+            }
             return array(
                 'status' => 200,
                 'message' => 'Account successfully deleted!'
