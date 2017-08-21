@@ -27,10 +27,7 @@ class UserController extends ActiveController
             'flogin' => ['POST'],
             'llogin' => ['POST'],
             'avatar-upload' => ['POST'],
-//            'view' => ['GET', 'HEAD'],
-//            'create' => ['POST'],
-//            'update' => ['PUT', 'PATCH'],
-//            'delete' => ['DELETE'],
+            'account-delete' => ['POST']
         ];
     }
 
@@ -348,27 +345,26 @@ class UserController extends ActiveController
         }
     }
 
-    //Authorization test
-    public function actionTest()
+    //Delete account
+    public function actionAccountDelete()
     {
-//        $user = Yii::$app->user->identity;
-//        return array(
-//            'message' => 'Auth OK!',
-//            'user' => $user
-//        );
-        $note = Yii::$app->fcm->createNotification("Title", "Working?");
-        $note->setColor('#ffffff')
-            ->setBadge(1);
+        $user = Yii::$app->user->identity;
 
-        $message = Yii::$app->fcm->createMessage();
-        $message->addRecipient(new Device('dqRiQqQ-vbQ:APA91bFAjevbV2kHMkgy9JRO-6Rf2yf4bjrvUH6_aQYv-8Tp6ugTwThBlw7k2Wr2Vue0TumDij-4kWdWzJBQkwZihq6FXVui0vLp8cMGeAT4MtW7aJaWr8f2RIQgUo7PeQw_ONBJcHIo'));
-        $message->setNotification($note)
-            ->setData(['test_id' => 1]);
-
-//        $response = Yii::$app->fcm->send($message);
-
-//        return $response->getStatusCode();
-        return Yii::$app->fcm->send($message);;
-
+        if(Yii::$app->request->post('data') == "delete" && $user){
+            $user->auth_key = '';
+            $user->status = 0;
+            $user->email = $user->email.'(deleted)';
+            $user->phone = '';
+            $user->save(false);
+            return array(
+                'status' => 200,
+                'message' => 'Account successfully deleted!'
+            );
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
     }
 }

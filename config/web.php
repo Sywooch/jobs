@@ -54,6 +54,7 @@ $config = [
                 'api/llogin' => '/api/user/llogin',
                 'api/user-data' => '/api/user/get-user-data',
                 'api/push-notification' => '/api/user/push-notification',
+                'api/account-delete' => '/api/user/account-delete',
                 'api/profile' => '/api/profile/profile',
                 'api/change-profile' => '/api/profile/change-profile',
                 'api/change-password' => '/api/profile/change-password',
