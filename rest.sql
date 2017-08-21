@@ -2,9 +2,9 @@
 -- version 4.4.15.7
 -- http://www.phpmyadmin.net
 --
--- Хост: 127.0.0.1:3307
--- Время создания: Авг 17 2017 г., 06:04
--- Версия сервера: 5.5.50
+-- Хост: 127.0.0.1:3306
+-- Время создания: Авг 21 2017 г., 11:10
+-- Версия сервера: 5.6.31
 -- Версия PHP: 5.6.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `image` varchar(255) DEFAULT NULL,
   `status` int(11) DEFAULT '0',
   `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `message`
@@ -87,7 +87,10 @@ INSERT INTO `message` (`id`, `sender_id`, `recepient_id`, `message`, `image`, `s
 (10, 25, 33, 'Hi, bro!', NULL, 0, '2017-07-31 06:37:07'),
 (11, 48, 49, 'lol', NULL, 1, '2017-08-01 05:52:57'),
 (12, 49, 4, 'Hello!', NULL, 0, '2017-08-10 09:19:35'),
-(13, 49, 4, '???', NULL, 0, '2017-08-10 09:19:48');
+(13, 49, 4, '???', NULL, 1, '2017-08-10 09:19:48'),
+(14, 65, 66, 'Hello, what about this job?', NULL, 1, '2017-08-17 05:40:43'),
+(15, 65, 66, 'Hello, what about this job?', NULL, 0, '2017-08-17 05:41:12'),
+(16, 65, 66, 'Hello, what about this job?', NULL, 0, '2017-08-17 05:41:14');
 
 -- --------------------------------------------------------
 
@@ -155,6 +158,27 @@ CREATE TABLE IF NOT EXISTS `push_notifications` (
 INSERT INTO `push_notifications` (`id`, `user_id`, `message`) VALUES
 (2, 65, 0),
 (3, 66, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `report`
+--
+
+CREATE TABLE IF NOT EXISTS `report` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `text` text NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `report`
+--
+
+INSERT INTO `report` (`id`, `sender_id`, `post_id`, `date`, `text`) VALUES
+(1, 65, 4, '2017-08-21 08:07:21', 'Bad post!');
 
 -- --------------------------------------------------------
 
@@ -265,6 +289,14 @@ ALTER TABLE `push_notifications`
   ADD KEY `push_notifications_ibfk_1` (`user_id`);
 
 --
+-- Индексы таблицы `report`
+--
+ALTER TABLE `report`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sender_id` (`sender_id`),
+  ADD KEY `post_id` (`post_id`);
+
+--
 -- Индексы таблицы `token_devices`
 --
 ALTER TABLE `token_devices`
@@ -297,7 +329,7 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT для таблицы `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT для таблицы `post`
 --
@@ -313,6 +345,11 @@ ALTER TABLE `post_image`
 --
 ALTER TABLE `push_notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT для таблицы `report`
+--
+ALTER TABLE `report`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT для таблицы `token_devices`
 --
@@ -359,6 +396,13 @@ ALTER TABLE `post_image`
 --
 ALTER TABLE `push_notifications`
   ADD CONSTRAINT `push_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `report`
+--
+ALTER TABLE `report`
+  ADD CONSTRAINT `report_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `report_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `token_devices`

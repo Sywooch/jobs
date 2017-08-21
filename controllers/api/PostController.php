@@ -2,6 +2,7 @@
 
 namespace app\controllers\api;
 
+use app\models\Report;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
 use yii\web\Response;
@@ -28,7 +29,8 @@ class PostController extends ActiveController
             'upload-post-image' => ['POST'],
             'user-posts' => ['POST'],
             'get-post-images' => ['POST'],
-            'post-search' => ['POST']
+            'post-search' => ['POST'],
+            'report' => ['POST']
         ];
     }
 
@@ -285,6 +287,22 @@ class PostController extends ActiveController
         $model = new Post();
         if(Yii::$app->request->post('search_title')){
             return $model->PostSearch(Yii::$app->request->post('search_title'));
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+    
+    //Report to post
+    public function actionReport()
+    {
+        $model = new Report();
+        $user = Yii::$app->user->identity;
+        
+        if(Yii::$app->request->post('post_id') && Yii::$app->request->post('text')){
+            return $model->PostReport(Yii::$app->request->post(), $user);
         } else {
             return array(
                 'status' => 400,
