@@ -4,6 +4,7 @@ namespace app\controllers\api;
 
 use app\models\Post;
 use app\models\PushNotifications;
+use app\models\TokenDevices;
 use paragraph1\phpFCM\Recipient\Device;
 use Yii;
 use yii\filters\auth\HttpBearerAuth;
@@ -362,6 +363,12 @@ class UserController extends ActiveController
                     foreach ($posts as $post){
                         $post->status = 2;
                         $post->save(false);
+                    }
+                }
+                $toked_devices = TokenDevices::find()->where(['user_id' => $user->id])->all();
+                if(isset($token_devices)){
+                    foreach($token_devices as $t_d){
+                        $t_d->delete();
                     }
                 }
             }
