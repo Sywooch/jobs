@@ -58,6 +58,7 @@ $config = [
                 'api/profile' => '/api/profile/profile',
                 'api/change-profile' => '/api/profile/change-profile',
                 'api/change-password' => '/api/profile/change-password',
+                'api/reset-password' => '/api/profile/reset-password',
                 'api/avatar-upload' => '/api/user/avatar-upload',
                 'api/category' => '/api/post/category',
                 'api/post-create' => '/api/post/create',

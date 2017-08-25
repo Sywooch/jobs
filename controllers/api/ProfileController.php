@@ -20,7 +20,8 @@ class ProfileController extends ActiveController
         return [
             'profile' => ['POST'],
             'change-profile' => ['POST'],
-            'change-password' => ['POST']
+            'change-password' => ['POST'],
+            'reset-password' => ['POST']
         ];
     }
 
@@ -31,6 +32,7 @@ class ProfileController extends ActiveController
         $behaviors['contentNegotiator']['formats']['text/html'] = Response::FORMAT_JSON;
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(),
+            'except' => ['reset-password']
         ];
         return $behaviors;
     }
@@ -39,6 +41,7 @@ class ProfileController extends ActiveController
     public function actionProfile()
     {
         $user = Yii::$app->user->identity;
+
         if($user){
 
             if($user->avatar) {
@@ -72,6 +75,7 @@ class ProfileController extends ActiveController
     public function actionChangeProfile()
     {
         $model = new Profile();
+
         $user = Yii::$app->user->identity;
         if($model->load(Yii::$app->request->post())){
             if($model->validate() && $model->Change(Yii::$app->request->post())){
@@ -114,8 +118,8 @@ class ProfileController extends ActiveController
     public function actionChangePassword()
     {
         $model = new Profile();
+
         if(Yii::$app->request->post('new_password')){
-//            $response = $model->ChangePassword(Yii::$app->request->post(), Yii::$app->user->identity);
             if($model->sendEmail(Yii::$app->user->identity))
             {
                 return array(
@@ -125,7 +129,41 @@ class ProfileController extends ActiveController
             } else {
                 return array(
                     'status' => 500,
-                    'message' => 'Mail was not send.'
+                    'message' => 'Can\'t sent mail.'
+                );
+            }
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Reset user password by Email
+    public function actionResetPassword()
+    {
+        $model = new Profile();
+
+        if(Yii::$app->request->post('email')){
+            $user = User::findOne(['email' => Yii::$app->request->post('email')]);
+
+            if(isset($user)){
+                if($model->sendEmail($user)){
+                    return array(
+                        'status' => 200,
+                        'message' => 'Mail has been sent.'
+                    );
+                } else {
+                    return array(
+                        'status' => 500,
+                        'message' => 'Can\'t sent mail.'
+                    );
+                }
+            } else {
+                return array(
+                    'status' => 403,
+                    'message' => 'Email not found!'
                 );
             }
         } else {
