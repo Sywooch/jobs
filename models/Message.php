@@ -43,8 +43,6 @@ class Message extends \yii\db\ActiveRecord
     public function SendMessage($sender, $request)
     {
         if(isset($request['recepient_id'])){
-//            $recepient = User::findOne(['id' => $request['recepient_id']]);
-//            $this->recepient_token_device = $recepient->token_device;
             $this->sender_id = $sender->id;
             $this->recepient_id = $request['recepient_id'];
             $this->message = $request['message'];
@@ -80,8 +78,6 @@ class Message extends \yii\db\ActiveRecord
     public function ImageUpload($photo, $recepient_id, $sender, $text)
     {
         if(isset($photo)){
-//            $recepient = User::findOne(['id' => $recepient_id]);
-//            $this->recepient_token_device = $recepient->token_device;
             $imageName = uniqid();
             $photo->saveAs('message_image/' . $imageName . '.' . $photo->extension);
             $this->image = 'message_image/' . $imageName . '.' . $photo->extension;
@@ -102,37 +98,54 @@ class Message extends \yii\db\ActiveRecord
         }
     }
 
-    //Find all Inbox chat users
-    public function InboxUsers($user)
+//    //Find all Inbox chat users
+//    public function InboxUsers($user)
+//    {
+//        $dataProvider = new SqlDataProvider([
+//            'sql' => "SELECT message.id, message.status, sender_id AS recepient_sender_id, user.username AS sender_username, message, image, date, user.avatar AS sender_avatar
+//              FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
+//              JOIN user ON user.id = message.sender_id
+//              WHERE message.recepient_id = {$user->id} AND message.status <> 10
+//              GROUP BY sender_id
+//              ORDER BY message.id DESC",
+//            'pagination' => [
+//                'pagesize' => 20
+//            ]
+//        ]);
+//
+//        return $dataProvider;
+//    }
+//
+//    //Find all Outbox chat users
+//    public function OutboxUsers($user)
+//    {
+//        $dataProvider = new SqlDataProvider([
+//            'sql' => "SELECT message.id, recepient_id AS recepient_sender_id, u.username AS recepient_username, message, image, date, u.avatar AS recepient_avatar
+//              FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
+//              JOIN user as u ON u.id = message.recepient_id
+//              WHERE message.sender_id = {$user->id}
+//              AND message.status <> 10
+//              GROUP BY recepient_id
+//              ORDER BY message.id DESC",
+//            'pagination' => [
+//                'pagesize' => 20
+//            ]
+//        ]);
+//
+//        return $dataProvider;
+//    }
+
+    //Get all Chat Users
+    public function ChatUsers($user)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, message.status, sender_id AS recepient_sender_id, user.username AS sender_username, message, image, date, user.avatar AS sender_avatar
-              FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
-              JOIN user ON user.id = message.sender_id
-              WHERE message.recepient_id = {$user->id} AND message.status <> 10
-              GROUP BY sender_id
-              ORDER BY message.id DESC",
+            'sql' => "SELECT u.username AS chat_user_username, u.avatar AS chat_user_avatar, message.id AS message_id, message, image, date, message.status, IF(recepient_id={$user->id}, sender_id, recepient_id) as chat_user
+                FROM (SELECT * FROM message where {$user->id} in (recepient_id, sender_id) ORDER BY message.id DESC) AS message
+                JOIN user as u ON u.id = (IF(sender_id = {$user->id}, recepient_id, sender_id))
+                GROUP BY chat_user
+                ORDER BY message.id DESC",
             'pagination' => [
-                'pagesize' => 20
-            ]
-        ]);
-
-        return $dataProvider;
-    }
-
-    //Find all Outbox chat users
-    public function OutboxUsers($user)
-    {
-        $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, recepient_id AS recepient_sender_id, u.username AS recepient_username, message, image, date, u.avatar AS recepient_avatar
-              FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
-              JOIN user as u ON u.id = message.recepient_id
-              WHERE message.sender_id = {$user->id}
-              AND message.status <> 10
-              GROUP BY recepient_id
-              ORDER BY message.id DESC",
-            'pagination' => [
-                'pagesize' => 20
+                'pageSize' => 20
             ]
         ]);
 
@@ -178,18 +191,17 @@ class Message extends \yii\db\ActiveRecord
         return $dataProvider;
     }
 
-    public function DeleteInboxMessage($request, $user)
+    public function DeleteMessageByUserId($request, $user)
     {
         if(isset($request)){
             foreach ($request as $item){
                 $messages = static::find()
                     ->where(['recepient_id' => $user->id, 'sender_id' => $item])
-                    ->andWhere(['<>', 'status', 10])
+                    ->orWhere(['recepient_id' => $item, 'sender_id' => $user->id])
                     ->all();
                 if(isset($messages)){
                     foreach ($messages as $message){
-                        $message->status = 10;
-                        $message->save(false);
+                        $message->delete();
                     }
                 }
             }
@@ -211,44 +223,14 @@ class Message extends \yii\db\ActiveRecord
         $user = Yii::$app->user->identity;
 
         $dataProvider = new SqlDataProvider([
-            'sql' => "
-                SELECT user.username as sender_username, message.id, message.image, message.message,
-                  message.sender_id AS recepient_sender_id, user.avatar AS sender_avatar, message.date, message.status
-                FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
-                JOIN user ON user.id = message.sender_id
-                WHERE message.recepient_id = {$user->id}
-                AND message.status <> 10
-                AND user.username LIKE '%{$request}%'
-                GROUP BY sender_id
-                ORDER BY message.id DESC
-            ",
+            'sql' => "SELECT u.username AS chat_user_username, u.avatar AS chat_user_avatar, message.id AS message_id, message, image, date, message.status, IF(recepient_id={$user->id}, sender_id, recepient_id) as chat_user
+                FROM (SELECT * FROM message where {$user->id} in (recepient_id, sender_id) ORDER BY message.id DESC) AS message
+                JOIN user as u ON u.id = (IF(sender_id = {$user->id}, recepient_id, sender_id))
+                AND u.username LIKE '%{$request}%'
+                GROUP BY chat_user
+                ORDER BY message.id DESC",
             'pagination' => [
-                'pageSize' => 10
-            ]
-        ]);
-
-        return $dataProvider;
-    }
-
-    //Search OutBox Users
-    public function OutboxUserSearch($request)
-    {
-        $user = Yii::$app->user->identity;
-
-        $dataProvider = new SqlDataProvider([
-            'sql' => "
-                SELECT user.username as recepient_username, message.id, message.image, message.message,
-                  message.recepient_id AS recepient_sender_id, user.avatar AS sender_avatar, message.date, message.status
-                FROM (SELECT * FROM message ORDER BY message.id DESC) AS message
-                JOIN user ON user.id = message.recepient_id
-                WHERE message.sender_id = {$user->id}
-                AND message.status <> 10
-                AND user.username LIKE '%{$request}%'
-                GROUP BY recepient_id
-                ORDER BY message.id DESC
-            ",
-            'pagination' => [
-                'pageSize' => 10
+                'pageSize' => 20
             ]
         ]);
 

@@ -23,11 +23,10 @@ class MessageController extends ActiveController
             'send-message' => ['POST'],
             'get-message' => ['POST'],
             'upload-message-photo' => ['POST'],
-            'inbox-users' => ['POST'],
-            'outbox-users' => ['POST'],
+            'chat-users' => ['POST'],
             'story' => ['POST'],
             'user-search' => ['POST'],
-            'delete-message-by-sender-id' => ['POST']
+            'delete-message-story' => ['POST']
         ];
     }
 
@@ -132,30 +131,46 @@ class MessageController extends ActiveController
     }
 
 
-    //Find all Inbox chat users
-    public function actionInboxUsers()
+//    //Find all Inbox chat users
+//    public function actionInboxUsers()
+//    {
+//        $model = new Message();
+//        $user = Yii::$app->user->identity;
+//
+//        if(Yii::$app->request->post('data') == 'inbox-users'){
+//            return $model->InboxUsers($user);
+//        } else {
+//            return array(
+//                'status' => 400,
+//                'message' => 'Bad parameters.'
+//            );
+//        }
+//    }
+//
+//    //Find all Outbox chat users
+//    public function actionOutboxUsers()
+//    {
+//        $model = new Message();
+//        $user = Yii::$app->user->identity;
+//
+//        if(Yii::$app->request->post('data') == 'outbox-users'){
+//            return $model->OutboxUsers($user);
+//        } else {
+//            return array(
+//                'status' => 400,
+//                'message' => 'Bad parameters.'
+//            );
+//        }
+//    }
+
+    //Get chat users
+    public function actionChatUsers()
     {
         $model = new Message();
         $user = Yii::$app->user->identity;
-
-        if(Yii::$app->request->post('data') == 'inbox-users'){
-            return $model->InboxUsers($user);
-        } else {
-            return array(
-                'status' => 400,
-                'message' => 'Bad parameters.'
-            );
-        }
-    }
-
-    //Find all Outbox chat users
-    public function actionOutboxUsers()
-    {
-        $model = new Message();
-        $user = Yii::$app->user->identity;
-
-        if(Yii::$app->request->post('data') == 'outbox-users'){
-            return $model->OutboxUsers($user);
+        
+        if(Yii::$app->request->post('data') == 'users'){
+            return $model->ChatUsers($user);
         } else {
             return array(
                 'status' => 400,
@@ -212,10 +227,8 @@ class MessageController extends ActiveController
     {
         $model = new Message();
 
-        if(Yii::$app->request->post('type') == 'inbox' && Yii::$app->request->post('search_user')){
+        if(Yii::$app->request->post('search_user')){
             return $model->UserSearch(Yii::$app->request->post('search_user'));
-        } elseif(Yii::$app->request->post('type') == 'outbox' && Yii::$app->request->post('search_user')) {
-            return $model->OutboxUserSearch(Yii::$app->request->post('search_user'));
         }else{
             return array(
                 'status' => 400,
@@ -225,13 +238,13 @@ class MessageController extends ActiveController
     }
 
     //Delete (change status) message story
-    public function actionDeleteMessageBySenderId()
+    public function actionDeleteMessageStory()
     {
         $model = new Message();
         $user = Yii::$app->user->identity;
 
-        if(Yii::$app->request->post('sender_ids')){
-            return $model->DeleteInboxMessage(Yii::$app->request->post('sender_ids'), $user);
+        if(Yii::$app->request->post('user_ids')){
+            return $model->DeleteMessageByUserId(Yii::$app->request->post('user_ids'), $user);
         } else {
             return array(
                 'status' => 400,
