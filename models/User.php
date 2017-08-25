@@ -382,7 +382,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $flag = false;
         $user->email = $result->emailAddress;
         if($this->findByEmail($result->emailAddress)){
-            $user = $this->findByEmail($result->email);
+            $user = $this->findByEmail($result->emailAddress);
             $this->auth_key = $user->auth_key;
             $token = TokenDevices::find()->where(['user_id'=>$user->id, 'token_device'=>$token_device])->all();
             if($token){
