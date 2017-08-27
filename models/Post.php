@@ -18,7 +18,7 @@ class Post extends \yii\db\ActiveRecord
     {
         return [
             [['specification', 'title', 'latitude', 'longitude', 'user_id', 'price', 'category_id'], 'required'],
-            [['title', 'latitude', 'longitude'], 'string', 'max' => 100],
+            [['title', 'latitude', 'longitude'], 'string', 'max' => 100]
         ];
     }
 
@@ -124,6 +124,24 @@ class Post extends \yii\db\ActiveRecord
                 GROUP BY post.id DESC",
             'pagination' => [
                 'pageSize' => 10,
+            ]
+        ]);
+
+        return $dataProvider;
+    }
+
+    //Search posts in radius
+    public function GeoSearch($lat, $lng, $r)
+    {
+        $dataProvider = new SqlDataProvider([
+            'sql' => "SELECT id AS post_id, title, latitude, longitude,
+                ROUND ( ( 6371 * acos( cos( radians({$lat}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians({$lng}) ) + sin( radians({$lat}) ) * sin( radians( latitude ) ) ) ), (2) ) AS distance
+                FROM post 
+                WHERE status = 0
+                HAVING distance < {$r}
+                ORDER BY distance",
+            'pagination' => [
+                'pageSize' => 20
             ]
         ]);
 

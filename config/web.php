@@ -85,7 +85,8 @@ $config = [
                 'api/search-message' => '/api/message/search-message',
                 'api/search-user' => '/api/message/user-search',
                 'api/delete-message-story' => '/api/message/delete-message-story',
-                'api/test-geo' => '/api/message/test-geo'
+//                'api/test-geo' => '/api/message/test-geo',
+                'api/geo-search' => '/api/geo/search'
             ],
         ],
         'cache' => [
