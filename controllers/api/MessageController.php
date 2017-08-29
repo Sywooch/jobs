@@ -193,8 +193,10 @@ class MessageController extends ActiveController
                 ->all();
             if(isset($messages)){
                 foreach ($messages as $message){
-                    $message->status = 1;
-                    $message->save(false);
+                    if($message->sender_id != $user->id && $message->recepient_id == $user->id){
+                        $message->status = 1;
+                        $message->save(false);
+                    }
                 }
             }
             return $model->Story(Yii::$app->request->post('user_id'), $user);
