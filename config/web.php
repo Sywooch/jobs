@@ -72,6 +72,7 @@ $config = [
                 'api/get-post' => '/api/post/get-post',
                 'api/get-post-images' => '/api/post/get-post-images',
                 'api/report' => '/api/post/report',
+                'api/user-raiting' => '/api/post/user-raiting',
                 'api/add-favorite' => '/api/favorite/add-favorite',
                 'api/favorites' => '/api/favorite/favorites',
                 'api/remove-favorite' => '/api/favorite/remove-favorite',

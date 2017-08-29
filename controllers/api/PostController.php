@@ -30,7 +30,8 @@ class PostController extends ActiveController
             'user-posts' => ['POST'],
             'get-post-images' => ['POST'],
             'post-search' => ['POST'],
-            'report' => ['POST']
+            'report' => ['POST'],
+            'user-raiting' => ['POST']
         ];
     }
 
@@ -303,6 +304,22 @@ class PostController extends ActiveController
         
         if(Yii::$app->request->post('post_id') && Yii::$app->request->post('text')){
             return $model->PostReport(Yii::$app->request->post(), $user);
+        } else {
+            return array(
+                'status' => 400,
+                'message' => 'Bad parameters.'
+            );
+        }
+    }
+
+    //Add raiting to user
+    public function actionUserRaiting()
+    {
+        $model = new Post();
+        $user = Yii::$app->user->identity;
+        
+        if(Yii::$app->request->post('raiting')){
+            return $model->AddRaiting(Yii::$app->request->post('raiting'), $user);
         } else {
             return array(
                 'status' => 400,

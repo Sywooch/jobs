@@ -148,4 +148,28 @@ class Post extends \yii\db\ActiveRecord
         return $dataProvider;
     }
 
+    //Add raiting to User
+    public function AddRaiting($raiting, $user)
+    {
+        if(!$user->raiting){
+            $user->raiting = $raiting;
+            if($user->save(false)){
+                return array(
+                    'status' => 200,
+                    'message' => 'Successfully added.',
+                    'user_raiting' => $raiting
+                );
+            }
+        }  else {
+            $user->raiting = ($user->raiting + $raiting) / 2;
+            if($user->save(false)){
+                return array(
+                    'status' => 200,
+                    'message' => 'Successfully added.',
+                    'user_raiting' => round($user->raiting)
+                );
+            }
+        }
+    }
+
 }
