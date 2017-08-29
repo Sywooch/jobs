@@ -142,7 +142,7 @@ class Message extends \yii\db\ActiveRecord
     public function ChatUsers($user)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT u.username AS chat_user_username, u.avatar AS chat_user_avatar, message.id AS message_id, message, image, date, message.status, IF(recepient_id={$user->id}, sender_id, recepient_id) as chat_user
+            'sql' => "SELECT sender_id, u.username AS chat_user_username, u.avatar AS chat_user_avatar, message.id AS message_id, message, image, date, message.status, IF(recepient_id={$user->id}, sender_id, recepient_id) as chat_user
                 FROM (SELECT * FROM message where {$user->id} in (recepient_id, sender_id) ORDER BY message.id DESC) AS message
                 JOIN user as u ON u.id = (IF(sender_id = {$user->id}, recepient_id, sender_id))
                 GROUP BY chat_user
@@ -159,7 +159,7 @@ class Message extends \yii\db\ActiveRecord
     public function Story($id, $current_user)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT message.id, sender_id, message, image, message.status, date, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
+            'sql' => "SELECT message.id, sender_id, recepient_id, message, image, message.status, date, user.avatar AS sender_avatar, u.avatar AS recepient_avatar
               FROM message
               JOIN user ON user.id = message.sender_id
               JOIN user as u ON u.id = message.recepient_id
