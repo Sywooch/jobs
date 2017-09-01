@@ -135,7 +135,7 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT id AS post_id, title, latitude, longitude,
-                ROUND ( ( 6371 * acos( cos( radians({$lat}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians({$lng}) ) + sin( radians({$lat}) ) * sin( radians( latitude ) ) ) ), (2) ) AS distance
+                ROUND((6371 * acos(cos(radians({$lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$lng})) + sin(radians({$lat})) * sin(radians(latitude)))), (2)) AS distance
                 FROM post 
                 WHERE status = 0
                 HAVING distance < {$r}
@@ -200,7 +200,7 @@ class Post extends \yii\db\ActiveRecord
                 );
             }
             if(isset($tokens_android)){
-                $note = Yii::$app->fcm->createNotification("Rating", $push_text);
+                $note = Yii::$app->fcm->createNotification("Rating updated", $push_text);
                 $note->setColor('#ffffff')
                     ->setBadge(1);
 
