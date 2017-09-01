@@ -37,7 +37,7 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT  post.id AS post_id, post.user_id as creatorID, post.specification,
-                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
+                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName, date
                 FROM post   
                 LEFT JOIN post_image 
                 ON post.id = post_image.post_id 
@@ -56,7 +56,7 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT  post.id AS post_id, post.user_id as creatorID, post.specification,
-                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
+                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName, date
                 FROM post
                 LEFT JOIN post_image 
                 ON post.id = post_image.post_id
@@ -101,7 +101,8 @@ class Post extends \yii\db\ActiveRecord
                 'latitude' => $post->latitude,
                 'longitude' => $post->longitude,
                 'categoryName' => $post->category->name,
-                'categoryID' => $post->category->id
+                'categoryID' => $post->category->id,
+                'date' => $post->date
             )
         ];
 
@@ -113,7 +114,7 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT  post.id AS post_id, post.user_id as creatorID, post.specification,
-                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
+                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName, date
                 FROM post
                 LEFT JOIN post_image 
                 ON post.id = post_image.post_id 
@@ -134,7 +135,7 @@ class Post extends \yii\db\ActiveRecord
     public function GeoSearch($lat, $lng, $r)
     {
         $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT id AS post_id, title, latitude, longitude,
+            'sql' => "SELECT id AS post_id, title, latitude, longitude, date,
                 ROUND((6371 * acos(cos(radians({$lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$lng})) + sin(radians({$lat})) * sin(radians(latitude)))), (2)) AS distance
                 FROM post 
                 WHERE status = 0

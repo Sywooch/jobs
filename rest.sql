@@ -2,9 +2,9 @@
 -- version 4.4.15.7
 -- http://www.phpmyadmin.net
 --
--- Хост: 127.0.0.1:3306
--- Время создания: Авг 29 2017 г., 15:08
--- Версия сервера: 5.6.31
+-- Хост: 127.0.0.1:3307
+-- Время создания: Сен 01 2017 г., 19:35
+-- Версия сервера: 5.5.50
 -- Версия PHP: 5.6.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `image` varchar(255) DEFAULT NULL,
   `status` int(11) DEFAULT '0',
   `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `message`
@@ -82,9 +82,11 @@ CREATE TABLE IF NOT EXISTS `message` (
 INSERT INTO `message` (`id`, `sender_id`, `recepient_id`, `message`, `image`, `status`, `date`) VALUES
 (12, 49, 4, 'Hello!', NULL, 0, '2017-08-10 09:19:35'),
 (13, 49, 4, '???', NULL, 1, '2017-08-10 09:19:48'),
-(14, 65, 66, 'Hello, what about this job?', NULL, 1, '2017-08-17 05:40:43'),
-(15, 65, 66, 'Hello, what about this job?', NULL, 0, '2017-08-17 05:41:12'),
-(16, 65, 66, 'Hello, what about this job?', NULL, 0, '2017-08-17 05:41:14');
+(14, 49, 66, 'Hello, what about this job?', NULL, 1, '2017-08-17 05:40:43'),
+(15, 49, 66, 'Hello, what about this job?', NULL, 0, '2017-08-17 05:41:12'),
+(16, 49, 66, 'Hello, what about this job?', NULL, 0, '2017-08-17 05:41:14'),
+(17, 66, 49, 'hello!', NULL, 1, '2017-08-29 15:09:13'),
+(18, 66, 49, 'fghdfgh', NULL, 1, '2017-08-29 15:10:50');
 
 -- --------------------------------------------------------
 
@@ -101,16 +103,17 @@ CREATE TABLE IF NOT EXISTS `post` (
   `latitude` varchar(255) NOT NULL,
   `longitude` varchar(255) NOT NULL,
   `status` tinyint(4) DEFAULT '0',
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `post`
 --
 
-INSERT INTO `post` (`id`, `specification`, `title`, `price`, `category_id`, `latitude`, `longitude`, `status`, `user_id`) VALUES
-(4, 'gdddddddddood post', 'Test title', 500, 2, 'laasdasdtitude', 'longadsasditude', 0, 1),
-(5, 'test', 'dskfgsdfg', 22, 1, '123', '123312', 0, 4);
+INSERT INTO `post` (`id`, `specification`, `title`, `price`, `category_id`, `latitude`, `longitude`, `status`, `user_id`, `date`) VALUES
+(4, 'gdddddddddood post', 'Test title', 500, 2, 'laasdasdtitude', 'longadsasditude', 0, 1, NULL),
+(5, 'test', 'dskfgsdfg', 22, 1, '123', '123312', 0, 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -327,7 +330,7 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT для таблицы `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT для таблицы `post`
 --

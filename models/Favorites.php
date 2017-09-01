@@ -25,7 +25,7 @@ class Favorites extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT favorites.id AS favorite_id, post.id AS post_id, post.user_id as creatorID, post.specification,
-                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName
+                post.title, post.price, post_image.image, post.latitude, post.longitude, post.category_id AS categoryID, category.name as categoryName, date
                 FROM post
                 LEFT JOIN post_image ON post.id = post_image.post_id 
                 JOIN favorites ON post.id = favorites.post_id

@@ -498,6 +498,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             ->one();
 
         if(isset($user)){
+            if(!$user->raiting){
+                $user->raiting = 0;
+            }
+
             return array(
                 'status' => 200,
                 'data' => [
@@ -507,7 +511,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                     'email' => $user->email,
                     'phone' => $user->phone,
                     'country' => $user->country,
-                    'city' => $user->city
+                    'city' => $user->city,
+                    'rating' => $user->raiting
                 ]
             );
         } else {
