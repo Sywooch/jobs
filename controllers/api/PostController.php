@@ -318,8 +318,8 @@ class PostController extends ActiveController
         $model = new Post();
         $user = Yii::$app->user->identity;
         
-        if(Yii::$app->request->post('raiting')){
-            return $model->AddRaiting(Yii::$app->request->post('raiting'), $user);
+        if(Yii::$app->request->post('raiting') && Yii::$app->request->post('user_id')){
+            return $model->AddRaiting(Yii::$app->request->post('raiting'), Yii::$app->request->post('user_id'), $user);
         } else {
             return array(
                 'status' => 400,

@@ -149,11 +149,14 @@ class Post extends \yii\db\ActiveRecord
     }
 
     //Add raiting to User
-    public function AddRaiting($raiting, $user)
+    public function AddRaiting($raiting, $user_id, $current_user)
     {
+        $user = User::findOne(['id' => $user_id]);
+        
         if(!$user->raiting){
             $user->raiting = $raiting;
             if($user->save(false)){
+                $this->SendPush($user_id, $current_user);
                 return array(
                     'status' => 200,
                     'message' => 'Successfully added.',
@@ -163,12 +166,52 @@ class Post extends \yii\db\ActiveRecord
         }  else {
             $user->raiting = ($user->raiting + $raiting) / 2;
             if($user->save(false)){
+                $this->SendPush($user_id, $current_user);
                 return array(
                     'status' => 200,
                     'message' => 'Successfully added.',
-                    'user_raiting' => round($user->raiting)
+                    'user_raiting' => $user->raiting
                 );
             }
+        }
+    }
+
+    public function SendPush($user_id, $current_user)
+    {
+        $push_text = $current_user->username.' rated you.';
+        $token_devices = TokenDevices::findAll(['user_id' => $user_id]);
+
+        if(isset($token_devices)){
+            foreach ($token_devices as $t_d){
+                if($t_d->token_device != 'SIMULATOR' && $t_d->is_ios == 1){
+                    $tokens_ios[] = $t_d->token_device;
+                }
+                if($t_d->token_device != 'SIMULATOR' && $t_d->is_ios == 0){
+                    $tokens_android[] = $t_d->token_device;
+                }
+            }
+            if(isset($tokens_ios)) {
+                $apns = Yii::$app->apns;
+                $apns->sendMulti($tokens_ios, $push_text,
+                    [
+                        'sound' => 'default',
+                        'badge' => 1
+                    ]
+                );
+            }
+            if(isset($tokens_android)){
+                $note = Yii::$app->fcm->createNotification("Rating", $push_text);
+                $note->setColor('#ffffff')
+                    ->setBadge(1);
+
+                $message = Yii::$app->fcm->createMessage();
+                foreach($tokens_android as $t_a){
+                    $message->addRecipient(new Device($t_a));
+                }
+                $message->setNotification($note)
+                    ->setData([]);
+            }
+
         }
     }
 
