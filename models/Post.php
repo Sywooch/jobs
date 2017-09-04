@@ -136,8 +136,13 @@ class Post extends \yii\db\ActiveRecord
     {
         $dataProvider = new SqlDataProvider([
             'sql' => "SELECT id AS post_id, title, latitude, longitude, date,
-                ROUND((6371 * acos(cos(radians({$lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$lng})) + sin(radians({$lat})) * sin(radians(latitude)))), (2)) AS distance
-                FROM post 
+                ROUND((6371 * acos(cos(radians({$lat})) * cos(radians(latitude)) * cos(radians(longitude) - radians({$lng})) + sin(radians({$lat})) * sin(radians(latitude)))), (2)) AS distance,
+                price, post_image.image, category_id AS categoryID, specification, post.user_id as creatorID, category.name as categoryName
+                FROM post
+                LEFT JOIN post_image 
+                ON post.id = post_image.post_id 
+                RIGHT JOIN category 
+                ON post.category_id = category.id
                 WHERE status = 0
                 HAVING distance < {$r}
                 ORDER BY distance",
