@@ -59,6 +59,7 @@ class FavoriteController extends ActiveController
             $model->user_id = $user->id;
             if($model->save()){
                 return array(
+                    'favorite_id' => $model->id,
                     'status' => 200,
                     'message' => 'Successfully added.'
                 );
